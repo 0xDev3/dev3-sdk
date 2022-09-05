@@ -1,9 +1,10 @@
-import { ContractDeploymentRequest } from '../../../types';
+import { ContractDeploymentRequest } from '../types';
 
-export class Rewarder {
+export class Contract {
   public deploymentRequest: ContractDeploymentRequest;
 
   constructor(deploymentRequest: ContractDeploymentRequest) {
     this.deploymentRequest = deploymentRequest;
   }
+
 }

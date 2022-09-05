@@ -1,6 +1,5 @@
 import { MainApi } from './api/main-api';
-import { Rewarder } from './contracts/dev3/rewarder/Rewarder';
-import { ContractId } from './types';
+import { Contract } from './contracts/Contract';
 
 export class Dev3SDK {
   private readonly BASE_URL =
@@ -10,10 +9,18 @@ export class Dev3SDK {
     MainApi.init(this.BASE_URL, apiKey, projectId);
   }
 
-  public async getRewarderInstances(): Promise<Rewarder[]> {
-    const queryResult = await MainApi.instance().getContractDeploymentRequests([
-      ContractId.REWARDER,
-    ]);
-    return queryResult.requests.map((r) => new Rewarder(r));
+  async getInstances(
+    ids: string[],
+    deployedOnly = true,
+    contractTags: string[] = [],
+    contractImplements: string[] = []
+  ): Promise<Contract[]> {
+    const queryResult = await MainApi.instance().getContractDeploymentRequests(
+      ids,
+      deployedOnly,
+      contractTags,
+      contractImplements
+    );
+    return queryResult.requests.map((r) => new Contract(r));
   }
 }

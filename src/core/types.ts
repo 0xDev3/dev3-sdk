@@ -1,37 +1,57 @@
-export enum ContractId {
-  ERC20_FIXED_SUPPLY = 'openzeppelin.erc20presetfixedsupply',
-  ERC20_MINTABLE_BURNABLE = 'openzeppelin.erc20presetmintableburnable',
-  ERC721_MINTER_PAUSER = 'openzeppelin.erc20presetmintableburnable',
-  CROWDFUNDING_VESTING = 'dev3.cfmanager-softcap-vesting',
-  CROWDFUNDING_SIMPLE = 'dev3.cfmanager-softcap',
-  PAYMENT_SPLITTER = 'dev3.paymentsplitter',
-  PAYROLL_HANDLER = 'dev3.payrollhandler',
-  REWARDER = 'dev3.rewarder',
-  TIME_LOCK = 'dev3.timelock',
-  VESTING_WALLET = 'dev3.vestingwallet',
+export interface CreateFunctionCallRequestWithContractId {
+  deployed_contract_id: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
 }
 
-export interface ScreenConfig {
-  before_action_message: string;
-  after_action_message: string;
+export interface CreateFunctionCallRequestWithContractAlias {
+  deployed_contract_alias: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
 }
 
-export interface DeployTx {
-  tx_hash?: string;
-  from: string;
-  to: string;
-  data: string;
-  value: string;
-  block_confirmations?: string;
-  timestamp?: Date;
+export interface CreateFunctionCallRequestWithContractAddress {
+  contract_address: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
 }
 
-export interface ConstructorParam {
+export interface FunctionParam {
   type: string;
   value: string;
 }
 
-export enum DeploymentRequestStatus {
+export interface ScreenConfig {
+  before_action_message?: string;
+  after_action_message?: string;
+}
+
+export interface TxData {
+  tx_hash?: string;
+  from?: string;
+  to: string;
+  data?: string;
+  value: string;
+  block_confirmations?: number;
+  timestamp?: Date;
+}
+
+export enum RequestStatus {
   SUCCESS = 'SUCCESS',
   PENDING = 'PENDING',
   FAILURE = 'FAILURE',
@@ -40,10 +60,10 @@ export enum DeploymentRequestStatus {
 export interface ContractDeploymentRequest {
   id: string;
   alias: string;
-  status: DeploymentRequestStatus;
-  contract_id: ContractId;
+  status: RequestStatus;
+  contract_id: string;
   contract_deployment_data: string;
-  constructor_params: ConstructorParam[];
+  constructor_params: FunctionParam[];
   contract_tags: string[];
   contract_implements: string[];
   initial_eth_amount: string;
@@ -55,9 +75,32 @@ export interface ContractDeploymentRequest {
   screen_config: ScreenConfig;
   contract_address?: string;
   deployer_address?: string;
-  deploy_tx: DeployTx;
+  deploy_tx: TxData;
 }
 
 export interface ContractDeploymentRequests {
   requests: ContractDeploymentRequest[];
+}
+
+export interface FunctionCallRequest {
+  id: string;
+  status: RequestStatus;
+  deployed_contract_id?: string;
+  contract_address: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  function_call_data: string;
+  eth_amount: string;
+  chain_id: number;
+  redirect_url: string;
+  project_id: string;
+  created_at: Date;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  function_call_tx: TxData;
+}
+
+export interface FunctionCallRequests {
+  requests: FunctionCallRequest[];
 }
