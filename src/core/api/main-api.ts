@@ -1,10 +1,19 @@
+import { AxiosResponse } from 'axios';
 import {
+  AttachTxHashRequest,
   ContractDeploymentRequests,
   CreateFunctionCallRequestWithContractAddress,
   CreateFunctionCallRequestWithContractAlias,
   CreateFunctionCallRequestWithContractId,
+  DeployableContract,
+  DeployableContractsRequest,
+  DeployableContractsResult,
   FunctionCallRequest,
   FunctionCallRequests,
+  ReadFromContractByAddressRequest,
+  ReadFromContractByAliasRequest,
+  ReadFromContractByIdRequest,
+  ReadFromContractResult,
 } from '../types';
 import { HttpClient } from './http-client';
 
@@ -35,7 +44,7 @@ export class MainApi extends HttpClient {
     contractImplements: string[]
   ): Promise<ContractDeploymentRequests> {
     const result = await this.protectedInstance.get<ContractDeploymentRequests>(
-      `/deploy/by-project/${this.projectId}`,
+      `deploy/by-project/${this.projectId}`,
       {
         params: {
           contractIds: contractIds.join(','),
@@ -55,7 +64,7 @@ export class MainApi extends HttpClient {
       | CreateFunctionCallRequestWithContractAddress
   ): Promise<FunctionCallRequest> {
     const result = await this.protectedInstance.post<FunctionCallRequest>(
-      `/function-call`,
+      'function-call',
       request
     );
     return result;
@@ -86,5 +95,54 @@ export class MainApi extends HttpClient {
       { params }
     );
     return result.requests;
+  }
+
+  public async readContract(
+    request:
+      | ReadFromContractByAddressRequest
+      | ReadFromContractByAliasRequest
+      | ReadFromContractByIdRequest
+  ): Promise<ReadFromContractResult> {
+    const result = await this.protectedInstance.get<ReadFromContractResult>(
+      'readonly-function-call',
+      {
+        params: request,
+      }
+    );
+    return result;
+  }
+
+  public async attachTxHashForFunctionCall(
+    request: AttachTxHashRequest
+  ): Promise<AxiosResponse> {
+    const result = await this.instance.put(
+      `function-call/${request.action_id}`,
+      {
+        tx_hash: request.tx_hash,
+        caller_address: request.caller_address,
+      }
+    );
+    return result;
+  }
+
+  public async fetchDeployableContracts(
+    request: DeployableContractsRequest
+  ): Promise<DeployableContractsResult> {
+    const result = await this.instance.get('deployable-contracts', {
+      params: {
+        tags: request.tags.join(','),
+        implements: request.implements.join(','),
+      },
+    });
+    return result;
+  }
+
+  public async fetchDeployableContractById(
+    id: string
+  ): Promise<DeployableContract> {
+    const result = await this.instance.get<DeployableContract>(
+      `deployable-contracts/${id}`
+    );
+    return result;
   }
 }

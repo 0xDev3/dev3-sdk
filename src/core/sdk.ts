@@ -1,5 +1,6 @@
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
+import { ContractManifest } from './contracts/ContractManifest';
 
 export class Dev3SDK {
   private readonly BASE_URL =
@@ -9,18 +10,34 @@ export class Dev3SDK {
     MainApi.init(this.BASE_URL, apiKey, projectId);
   }
 
-  async getInstances(
-    ids: string[],
+  async getDeployableContracts(
+    contractTags: string[] = [],
+    contractImplements: string[] = []
+  ): Promise<ContractManifest[]> {
+    const result = await MainApi.instance().fetchDeployableContracts({
+      tags: contractTags,
+      implements: contractImplements,
+    });
+    return result.deployable_contracts.map((r) => new ContractManifest(r));
+  }
+
+  async getDeployedContracts(
+    ids: string[] = [],
     deployedOnly = true,
     contractTags: string[] = [],
     contractImplements: string[] = []
   ): Promise<Contract[]> {
-    const queryResult = await MainApi.instance().getContractDeploymentRequests(
+    const result = await MainApi.instance().fetchContractDeploymentRequests(
       ids,
       deployedOnly,
       contractTags,
       contractImplements
     );
-    return queryResult.requests.map((r) => new Contract(r));
+    return result.requests.map((r) => new Contract(r));
+  }
+
+  async getDeployableContract(id: string): Promise<ContractManifest> {
+    const result = await MainApi.instance().fetchDeployableContractById(id);
+    return new ContractManifest(result);
   }
 }

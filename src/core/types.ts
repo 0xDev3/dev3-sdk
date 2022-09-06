@@ -33,7 +33,7 @@ export interface CreateFunctionCallRequestWithContractAddress {
 
 export interface FunctionParam {
   type: string;
-  value: string;
+  value: string | string[] | boolean;
 }
 
 export interface ScreenConfig {
@@ -103,4 +103,98 @@ export interface FunctionCallRequest {
 
 export interface FunctionCallRequests {
   requests: FunctionCallRequest[];
+}
+
+export interface ReadFromContractByAddressRequest {
+  contract_address: string;
+  block_number?: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  output_params: string[];
+  caller_address: string;
+}
+
+export interface ReadFromContractByIdRequest {
+  deployed_contract_id: string;
+  block_number?: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  output_params: string[];
+  caller_address: string;
+}
+
+export interface ReadFromContractByAliasRequest {
+  deployed_contract_alias: string;
+  block_number?: string;
+  function_name: string;
+  function_params: FunctionParam[];
+  output_params: string[];
+  caller_address: string;
+}
+
+export interface ReadFromContractResult {
+  deployed_contract_id?: string;
+  contract_address: string;
+  block_number: string;
+  timestamp: Date;
+  return_values: string[];
+}
+
+export interface AttachTxHashRequest {
+  action_id: string;
+  tx_hash: string;
+  caller_address: string;
+}
+
+export interface DeployableContractsRequest {
+  tags: string[];
+  implements: string[];
+}
+
+export interface FunctionParameter {
+  name: string;
+  description: string;
+  solidity_name: string;
+  solidity_type: string;
+  recommended_types: string[];
+  parameters?: FunctionParameter[];
+}
+
+export interface ContractConstructor {
+  inputs: FunctionParameter[];
+  description: string;
+  payable: boolean;
+}
+
+export interface ContractFunction {
+  name: string;
+  description: string;
+  solidity_name: string;
+  inputs: FunctionParameter[];
+  outputs: FunctionParameter[];
+  emittable_events: string[];
+  read_only: boolean;
+}
+
+export interface ContractEvent {
+  name: string;
+  description: string;
+  solidity_name: string;
+  inputs: FunctionParameter[];
+}
+
+export interface DeployableContract {
+  id: string;
+  name?: string;
+  description?: string;
+  binary: string;
+  tags: string[];
+  implements: string[];
+  constructors: ContractConstructor[];
+  functions: ContractFunction[];
+  events: ContractEvent[];
+}
+
+export interface DeployableContractsResult {
+  deployable_contracts: DeployableContract[];
 }
