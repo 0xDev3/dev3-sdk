@@ -103,11 +103,9 @@ export class MainApi extends HttpClient {
       | ReadFromContractByAliasRequest
       | ReadFromContractByIdRequest
   ): Promise<ReadFromContractResult> {
-    const result = await this.protectedInstance.get<ReadFromContractResult>(
+    const result = await this.protectedInstance.post<ReadFromContractResult>(
       'readonly-function-call',
-      {
-        params: request,
-      }
+      request
     );
     return result;
   }

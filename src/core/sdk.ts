@@ -21,6 +21,15 @@ export class Dev3SDK {
     return result.deployable_contracts.map((r) => new ContractManifest(r));
   }
 
+  async getContractByAlias(alias: string): Promise<Contract> {
+    const result = await this.getDeployedContracts();
+    const contract = result.find((c) => c.deploymentRequest.alias === alias);
+    if (!contract) {
+      throw 'Not found!';
+    }
+    return contract;
+  }
+
   async getDeployedContracts(
     ids: string[] = [],
     deployedOnly = true,

@@ -33,8 +33,19 @@ export interface CreateFunctionCallRequestWithContractAddress {
 
 export interface FunctionParam {
   type: string;
-  value: string | string[] | boolean;
+  value: string | string[] | boolean | FunctionParam[];
 }
+
+export type FunctionOutputParam =
+  | string
+  | {
+      type: 'struct';
+      elems: FunctionOutputParam[];
+    }
+  | {
+      type: 'struct[]';
+      elems: FunctionOutputParam[];
+    };
 
 export interface ScreenConfig {
   before_action_message?: string;
@@ -110,7 +121,7 @@ export interface ReadFromContractByAddressRequest {
   block_number?: string;
   function_name: string;
   function_params: FunctionParam[];
-  output_params: string[];
+  output_params: FunctionOutputParam[];
   caller_address: string;
 }
 
@@ -119,7 +130,7 @@ export interface ReadFromContractByIdRequest {
   block_number?: string;
   function_name: string;
   function_params: FunctionParam[];
-  output_params: string[];
+  output_params: FunctionOutputParam[];
   caller_address: string;
 }
 
@@ -128,7 +139,7 @@ export interface ReadFromContractByAliasRequest {
   block_number?: string;
   function_name: string;
   function_params: FunctionParam[];
-  output_params: string[];
+  output_params: FunctionOutputParam[];
   caller_address: string;
 }
 
