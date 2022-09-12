@@ -1,7 +1,9 @@
+import BigNumber from 'bignumber.js';
+
 export interface CreateFunctionCallRequestWithContractId {
   deployed_contract_id: string;
   function_name: string;
-  function_params: FunctionParam[];
+  function_params: EncodedFunctionParameter[];
   eth_amount: string;
   arbitrary_data?: Map<string, object>;
   screen_config?: ScreenConfig;
@@ -12,7 +14,7 @@ export interface CreateFunctionCallRequestWithContractId {
 export interface CreateFunctionCallRequestWithContractAlias {
   deployed_contract_alias: string;
   function_name: string;
-  function_params: FunctionParam[];
+  function_params: EncodedFunctionParameter[];
   eth_amount: string;
   arbitrary_data?: Map<string, object>;
   screen_config?: ScreenConfig;
@@ -23,7 +25,7 @@ export interface CreateFunctionCallRequestWithContractAlias {
 export interface CreateFunctionCallRequestWithContractAddress {
   contract_address: string;
   function_name: string;
-  function_params: FunctionParam[];
+  function_params: EncodedFunctionParameter[];
   eth_amount: string;
   arbitrary_data?: Map<string, object>;
   screen_config?: ScreenConfig;
@@ -31,20 +33,23 @@ export interface CreateFunctionCallRequestWithContractAddress {
   redirect_url?: string;
 }
 
-export interface FunctionParam {
+export interface EncodedFunctionParameter {
   type: string;
-  value: string | string[] | boolean | FunctionParam[];
+  value: string | string[] | boolean | EncodedFunctionParameter[];
 }
 
-export type FunctionOutputParam =
+export type EncodedFunctionParameterValue =
+  | boolean
+  | BigNumber
+  | string
+  | EncodedFunctionParameter[]
+  | EncodedFunctionParameterValue[];
+
+export type EncodedFunctionOutput =
   | string
   | {
-      type: 'struct';
-      elems: FunctionOutputParam[];
-    }
-  | {
-      type: 'struct[]';
-      elems: FunctionOutputParam[];
+      type: string;
+      elems: EncodedFunctionOutput[];
     };
 
 export interface ScreenConfig {
@@ -74,7 +79,7 @@ export interface ContractDeploymentRequest {
   status: RequestStatus;
   contract_id: string;
   contract_deployment_data: string;
-  constructor_params: FunctionParam[];
+  constructor_params: EncodedFunctionParameter[];
   contract_tags: string[];
   contract_implements: string[];
   initial_eth_amount: string;
@@ -99,7 +104,7 @@ export interface FunctionCallRequest {
   deployed_contract_id?: string;
   contract_address: string;
   function_name: string;
-  function_params: FunctionParam[];
+  function_params: EncodedFunctionParameter[];
   function_call_data: string;
   eth_amount: string;
   chain_id: number;
@@ -120,8 +125,8 @@ export interface ReadFromContractByAddressRequest {
   contract_address: string;
   block_number?: string;
   function_name: string;
-  function_params: FunctionParam[];
-  output_params: FunctionOutputParam[];
+  function_params: EncodedFunctionParameter[];
+  output_params: EncodedFunctionOutput[];
   caller_address: string;
 }
 
@@ -129,8 +134,8 @@ export interface ReadFromContractByIdRequest {
   deployed_contract_id: string;
   block_number?: string;
   function_name: string;
-  function_params: FunctionParam[];
-  output_params: FunctionOutputParam[];
+  function_params: EncodedFunctionParameter[];
+  output_params: EncodedFunctionOutput[];
   caller_address: string;
 }
 
@@ -138,8 +143,8 @@ export interface ReadFromContractByAliasRequest {
   deployed_contract_alias: string;
   block_number?: string;
   function_name: string;
-  function_params: FunctionParam[];
-  output_params: FunctionOutputParam[];
+  function_params: EncodedFunctionParameter[];
+  output_params: EncodedFunctionOutput[];
   caller_address: string;
 }
 
