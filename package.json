@@ -1,7 +1,7 @@
 {
   "name": "dev3-sdk",
   "version": "0.0.1",
-  "description": "",
+  "description": "SDK for interacting with the 0xDev3 platform.",
   "main": "dist/node/index.js",
   "module": "dist/node/index.js",
   "browser": "dist/browser/index.js",
