@@ -1,3 +1,4 @@
+import { SDKError } from '../common/error';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
@@ -25,7 +26,9 @@ export class Dev3SDK {
     const result = await this.getDeployedContracts();
     const contract = result.find((c) => c.deploymentRequest.alias === alias);
     if (!contract) {
-      throw 'Not found!';
+      return Promise.reject(
+        new SDKError(`Contract with alias '${alias}' not found!`)
+      );
     }
     return contract;
   }

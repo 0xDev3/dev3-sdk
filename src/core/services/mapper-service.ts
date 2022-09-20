@@ -1,3 +1,4 @@
+import { SDKError } from '../../common/error';
 import {
   DeployableContract,
   FunctionParameter,
@@ -6,7 +7,6 @@ import {
   EncodedFunctionOutput,
   ContractFunction,
 } from '../types';
-import { BigNumber } from 'bignumber.js';
 
 export class MapperService {
   private static _instance?: MapperService;
@@ -90,7 +90,7 @@ export class MapperService {
         0,
         solidityType.lastIndexOf('[')
       );
-      return (value as any[]).map((v) => {
+      return ((value as any[]) ?? []).map((v) => {
         return this.encodeInputValue(
           v,
           decorator,
@@ -101,9 +101,11 @@ export class MapperService {
       if (solidityType.startsWith('tuple')) {
         const tupleParameters = decorator.parameters;
         if (!tupleParameters) {
-          throw `MapperService:: Expected tuple definition but nothing found for decorator ${decorator.name} and function ${decorator.solidity_name}`;
+          throw new SDKError(
+            `Expected tuple definition but nothing found for decorator ${decorator.name} and function ${decorator.solidity_name}`
+          );
         }
-        return (value as any[]).map((v, i) => {
+        return ((value as any[]) ?? []).map((v, i) => {
           return {
             type: tupleParameters[i].solidity_type,
             value: this.encodeInputValue(
@@ -116,17 +118,19 @@ export class MapperService {
       } else {
         if (solidityType === 'bool') return Boolean(value);
         else if (solidityType.startsWith('bytes')) {
-          return (value as any[]).map((v) => BigNumber(v));
+          return ((value as any[]) ?? []).map((v) => String(v));
         } else if (
           solidityType.startsWith('uint') ||
           solidityType.startsWith('int') ||
-          solidityType.startsWith('byte')
+          solidityType.startsWith('byte') ||
+          solidityType.startsWith('address') ||
+          solidityType.startsWith('string')
         ) {
-          return BigNumber(value);
-        } else if (solidityType === 'address' || solidityType === 'string') {
           return String(value);
         } else {
-          throw `MapperService:: Could not parse solidity type: ${solidityType} for function ${decorator.name}`;
+          throw new SDKError(
+            `Could not parse solidity type: ${solidityType} for function ${decorator.name}`
+          );
         }
       }
     }
@@ -140,7 +144,9 @@ export class MapperService {
       (decorator) => decorator.solidity_name === functionName
     );
     if (!functionDecorator) {
-      throw `MapperService:: Can't call execute on a contract . Function ${functionName} not found in contract descriptor.`;
+      throw new SDKError(
+        `Can't call execute on a contract . Function ${functionName} not found in contract descriptor.`
+      );
     }
     return functionDecorator;
   }

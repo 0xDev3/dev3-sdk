@@ -1,3 +1,4 @@
+import { SDKError } from '../../common/error';
 import { MainApi } from '../api/main-api';
 import { DeployableContract } from '../types';
 
@@ -17,7 +18,9 @@ export class DeployableContractsService {
     await this.lazyInit();
     const deployableContract = this.deployableContracts.get(contractId);
     if (!deployableContract) {
-      throw `DeployableContractsService:: Fatal error. No contract found with id ${contractId}`;
+      throw new SDKError(
+        `DeployableContractsService:: Fatal error. No contract found with id ${contractId}`
+      );
     }
     return deployableContract;
   }

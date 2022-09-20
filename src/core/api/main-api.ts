@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import { SDKError } from '../../common/error';
 import {
   AttachTxHashRequest,
   ContractDeploymentRequests,
@@ -32,7 +33,7 @@ export class MainApi extends HttpClient {
 
   public static instance(): MainApi {
     if (this.classInstance === undefined) {
-      throw 'FATAL_ERROR: API module not initialized.';
+      throw new SDKError('API module not initialized.');
     }
     return this.classInstance;
   }

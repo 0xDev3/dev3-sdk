@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'ethers';
 
 export interface CreateFunctionCallRequestWithContractId {
   deployed_contract_id: string;

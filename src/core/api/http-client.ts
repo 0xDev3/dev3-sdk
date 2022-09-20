@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { BackendError } from '../../common/error';
 
 declare module 'axios' {
   interface AxiosResponse<T> extends Promise<T> {}
@@ -38,5 +39,14 @@ export abstract class HttpClient {
 
   private _handleResponse = ({ data }: AxiosResponse) => data;
 
-  protected _handleError = (error: Error) => Promise.reject(error);
+  protected _handleError = (error: Error) => {
+    if (error instanceof AxiosError) {
+      const code: string = error.response?.data?.error_code;
+      const message: string = error.response?.data?.message;
+      if (code !== undefined && message !== undefined) {
+        return Promise.reject(new BackendError(code, message));
+      }
+    }
+    return Promise.reject(error);
+  };
 }
