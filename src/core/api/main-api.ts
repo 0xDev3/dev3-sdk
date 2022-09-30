@@ -2,10 +2,13 @@ import { AxiosResponse } from 'axios';
 import { SDKError } from '../../common/error';
 import {
   AttachTxHashRequest,
+  ContractDeploymentRequest,
   ContractDeploymentRequests,
+  CreateContractDeploymentRequest,
   CreateFunctionCallRequestWithContractAddress,
   CreateFunctionCallRequestWithContractAlias,
   CreateFunctionCallRequestWithContractId,
+  CreateWalletAuthorizationRequest,
   DeployableContract,
   DeployableContractsRequest,
   DeployableContractsResult,
@@ -15,6 +18,8 @@ import {
   ReadFromContractByAliasRequest,
   ReadFromContractByIdRequest,
   ReadFromContractResult,
+  WalletAuthorizationRequest,
+  WalletAuthorizationRequests,
 } from '../types';
 import { HttpClient } from './http-client';
 
@@ -36,6 +41,60 @@ export class MainApi extends HttpClient {
       throw new SDKError('API module not initialized.');
     }
     return this.classInstance;
+  }
+
+  public async createWalletAuthorizationRequest(
+    request: CreateWalletAuthorizationRequest
+  ): Promise<WalletAuthorizationRequest> {
+    const result = await this.protectedInstance.post<WalletAuthorizationRequest>(
+      'wallet-authorization',
+      request
+    );
+    return result;
+  }
+
+  public async fetchWalletAuthorizationRequestById(
+    id: string
+  ): Promise<WalletAuthorizationRequest> {
+    const result = await this.instance.get<WalletAuthorizationRequest>(
+      `wallet-authorization/${id}` 
+    );
+    return result;
+  }
+
+  public async fetchWalletAuthorizationRequests(): Promise<WalletAuthorizationRequests> {
+    const result = await this.instance.get<WalletAuthorizationRequests>(
+      `wallet-authorization/by-project/${this.projectId}`
+    );
+    return result;
+  }
+
+  public async createContractDeploymentRequest(
+    request: CreateContractDeploymentRequest
+  ): Promise<ContractDeploymentRequest> {
+    const result = await this.protectedInstance.post<ContractDeploymentRequest>(
+      'deploy',
+      request
+    );
+    return result;
+  }
+
+  public async fetchContractDeploymentRequestById(
+    id: string
+  ): Promise<ContractDeploymentRequest> {
+    const result = await this.instance.get<ContractDeploymentRequest>(
+      `deploy/${id}`
+    );
+    return result;
+  }
+
+  public async fetchContractDeploymentRequestByAlias(
+    alias: string
+  ): Promise<ContractDeploymentRequest> {
+    const result = await this.instance.get<ContractDeploymentRequest>(
+      `deploy/by-project/${this.projectId}/by-alias/${alias}`
+    );
+    return result;
   }
 
   public async fetchContractDeploymentRequests(

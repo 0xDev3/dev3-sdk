@@ -1,7 +1,9 @@
+const defaultPollIntervalSeconds = 3;
+
 export async function poll<T>(
   fetchFn: () => Promise<T>,
   conditionFn: (response: T) => boolean,
-  intervalSeconds: number
+  intervalSeconds: number = defaultPollIntervalSeconds
 ): Promise<T> {
   let result = await fetchFn();
   while (conditionFn(result)) {

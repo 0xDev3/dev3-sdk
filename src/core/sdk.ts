@@ -1,17 +1,27 @@
-import { SDKError } from '../common/error';
+import { ContractCallAction } from './actions/ContractCallAction';
+import { ContractDeployAction } from './actions/ContractDeployAction';
+import { WalletAuthorizationAction } from './actions/WalletAuthorizationAction';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
+import { CreateWalletAuthorizationRequest } from './types';
 
 export class Dev3SDK {
   private readonly BASE_URL =
-    'https://eth-staging.ampnet.io/api/blockchain-api/v1';
+    'https://invest-api.ampnet.io/api/blockchain-api/v1';
 
   constructor(apiKey: string, projectId: string) {
     MainApi.init(this.BASE_URL, apiKey, projectId);
   }
 
-  async getDeployableContracts(
+  async authorize(
+    options?: CreateWalletAuthorizationRequest
+  ): Promise<WalletAuthorizationAction> {
+    const result = await MainApi.instance().createWalletAuthorizationRequest(options ?? {});
+    return new WalletAuthorizationAction(result);
+  }
+
+  async getManifests(
     contractTags: string[] = [],
     contractImplements: string[] = []
   ): Promise<ContractManifest[]> {
@@ -22,18 +32,12 @@ export class Dev3SDK {
     return result.deployable_contracts.map((r) => new ContractManifest(r));
   }
 
-  async getContractByAlias(alias: string): Promise<Contract> {
-    const result = await this.getDeployedContracts();
-    const contract = result.find((c) => c.deploymentRequest.alias === alias);
-    if (!contract) {
-      return Promise.reject(
-        new SDKError(`Contract with alias '${alias}' not found!`)
-      );
-    }
-    return contract;
+  async getManifestById(id: string): Promise<ContractManifest> {
+    const result = await MainApi.instance().fetchDeployableContractById(id);
+    return new ContractManifest(result);
   }
 
-  async getDeployedContracts(
+  async getContracts(
     ids: string[] = [],
     deployedOnly = true,
     contractTags: string[] = [],
@@ -48,8 +52,24 @@ export class Dev3SDK {
     return result.requests.map((r) => new Contract(r));
   }
 
-  async getDeployableContract(id: string): Promise<ContractManifest> {
-    const result = await MainApi.instance().fetchDeployableContractById(id);
-    return new ContractManifest(result);
+  async getContractByAlias(alias: string): Promise<Contract> {
+    const result = await MainApi.instance().fetchContractDeploymentRequestByAlias(alias);
+    return new Contract(result);
   }
+
+  async getContractById(id: string): Promise<Contract> {
+    const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
+    return new Contract(result);
+  }
+
+  async getContractCallById(id: string): Promise<ContractCallAction> {
+    const result = await MainApi.instance().fetchFunctionCallRequestById(id);
+    return new ContractCallAction(result);
+  }
+
+  async getContractDeployAction(id: string): Promise<ContractDeployAction> {
+    const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
+    return new ContractDeployAction(result);
+  } 
+
 }

@@ -6,6 +6,7 @@ import {
   EncodedFunctionParameterValue,
   EncodedFunctionOutput,
   ContractFunction,
+  ContractConstructor,
 } from '../types';
 
 export class MapperService {
@@ -18,11 +19,25 @@ export class MapperService {
     return MapperService._instance;
   }
 
+  public encodeConstructorInputs(
+    functionValues: any[],
+    manifest: DeployableContract
+  ): EncodedFunctionParameter[] {
+    if (functionValues.length === 0) { return []; }
+    const constructorDecorator = this.getConstructorDecoratorFromManifest(
+      manifest,
+      functionValues.length
+    );
+    const inputDecorators = constructorDecorator.inputs;
+    return this.encodeInputsImpl(functionValues, inputDecorators)
+  }
+
   public encodeInputs(
     functionName: string,
     functionValues: any[],
     manifest: DeployableContract
   ): EncodedFunctionParameter[] {
+    if (functionValues.length === 0) { return []; }
     const functionDecorator = this.getFunctionDecoratorFromManifest(
       functionName,
       manifest
@@ -134,6 +149,21 @@ export class MapperService {
         }
       }
     }
+  }
+
+  private getConstructorDecoratorFromManifest(
+    contractDecorator: DeployableContract,
+    paramsCount: number
+  ): ContractConstructor {
+    const constructorDecorator = contractDecorator.constructors.find(
+      (decorator) => decorator.inputs.length === paramsCount
+    );
+    if (!constructorDecorator) {
+      throw new SDKError(
+        `Can't deploy contract. Constructor with ${paramsCount} param(s) not found in contract descriptor.`
+      );
+    }
+    return constructorDecorator;
   }
 
   private getFunctionDecoratorFromManifest(

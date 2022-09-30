@@ -1,5 +1,29 @@
 import { BigNumber } from 'ethers';
 
+export interface CreateWalletAuthorizationRequest {
+  wallet_address?: string;
+  redirect_url?: string;
+  arbitrary_data?: Map<string, unknown>;
+  screen_config?: ScreenConfig;
+}
+
+export interface WalletAuthorizationRequests {
+  requests: WalletAuthorizationRequest[];
+}
+
+export interface WalletAuthorizationRequest {
+  id: string;
+  project_id: string;
+  status: RequestStatus;
+  redirect_url: string;
+  wallet_address?: string;
+  arbitrary_data?: Map<string, unknown>;
+  screen_config?: ScreenConfig;
+  message_to_sign: string;
+  signed_message?: string;
+  created_at: Date;
+}
+
 export interface CreateFunctionCallRequestWithContractId {
   deployed_contract_id: string;
   function_name: string;
@@ -73,6 +97,17 @@ export enum RequestStatus {
   FAILURE = 'FAILURE',
 }
 
+export interface CreateContractDeploymentRequest {
+  alias: string;
+  contract_id: string;
+  constructor_params: EncodedFunctionParameter[];
+  deployer_address?: string;
+  redirect_url?: string;
+  initial_eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+}
+
 export interface ContractDeploymentRequest {
   id: string;
   alias: string;
@@ -87,11 +122,13 @@ export interface ContractDeploymentRequest {
   redirect_url: string;
   project_id: string;
   created_at: Date;
-  arbitrary_data: Map<string, object>;
+  arbitrary_data?: Map<string, object>;
   screen_config: ScreenConfig;
   contract_address?: string;
   deployer_address?: string;
+  description?: string;
   deploy_tx: TxData;
+  imported: boolean;
 }
 
 export interface ContractDeploymentRequests {

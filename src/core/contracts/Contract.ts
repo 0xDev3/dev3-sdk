@@ -3,16 +3,16 @@ import {
   RequestStatus,
   ScreenConfig,
 } from '../types';
-import { ContractCall } from '../actions/ContractCall';
+import { ContractCallAction } from '../actions/ContractCallAction';
 import { DeployableContractsService } from '../services/manifest-service';
 import { MainApi } from '../api/main-api';
 import { MapperService } from '../services/mapper-service';
 import { SDKError } from '../../common/error';
 
 export class Contract {
-  protected readonly defaultCaller =
-    '0x0000000000000000000000000000000000000000';
-  protected readonly defaultEthAmount = '0';
+  
+  private readonly defaultCaller = '0x0000000000000000000000000000000000000000';
+  private readonly defaultEthAmount = '0';
 
   public deploymentRequest: ContractDeploymentRequest;
 
@@ -20,28 +20,17 @@ export class Contract {
     this.deploymentRequest = deploymentRequest;
   }
 
-  public async execute(
+  public async buildAction(
     functionName: string,
     functionParams: any[],
     config?: {
-      onCreate?: (action: ContractCall) => void;
-      onExecute?: (action: ContractCall) => void;
       ethAmount?: string;
       arbitraryData?: Map<string, object>;
       screenConfig?: ScreenConfig;
       callerAddress?: string;
       redirectUrl?: string;
     }
-  ): Promise<ContractCall> {
-    if (this.deploymentRequest.status !== RequestStatus.SUCCESS) {
-      return Promise.reject(
-        `Can't call execute on a contract with deployment status: ${this.deploymentRequest.status}`
-      );
-    }
-    const contractCall = new ContractCall({
-      onCreate: config?.onCreate,
-      onExecute: config?.onExecute,
-    });
+  ): Promise<ContractCallAction> {
     const contractManifest =
       await DeployableContractsService.instance().getManifest(
         this.deploymentRequest.contract_id
@@ -51,7 +40,7 @@ export class Contract {
       functionParams,
       contractManifest
     );
-    return contractCall.startFlow({
+    const callRequest = await MainApi.instance().createFunctionCallRequest({
       deployed_contract_id: this.deploymentRequest.id,
       function_name: functionName,
       function_params: functionParamsMapped,
@@ -61,6 +50,7 @@ export class Contract {
       caller_address: config?.callerAddress,
       redirect_url: config?.redirectUrl,
     });
+    return new ContractCallAction(callRequest);
   }
 
   public async read(functionName: string, functionParams: any[]): Promise<any> {
