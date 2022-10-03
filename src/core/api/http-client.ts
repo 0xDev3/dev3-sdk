@@ -10,8 +10,9 @@ export abstract class HttpClient {
   protected readonly projectId: string;
   protected readonly instance: AxiosInstance;
   protected readonly protectedInstance: AxiosInstance;
+  protected readonly identityServiceInstance: AxiosInstance;
 
-  public constructor(baseURL: string, apiKey: string, projectId: string) {
+  public constructor(baseURL: string, identityBaseURL: string, apiKey: string, projectId: string) {
     this.instance = axios.create({
       baseURL,
     });
@@ -20,6 +21,9 @@ export abstract class HttpClient {
       headers: {
         'X-API-KEY': apiKey,
       },
+    });
+    this.identityServiceInstance = axios.create({
+      baseURL: identityBaseURL
     });
     this.projectId = projectId;
     this.apiKey = apiKey;

@@ -1,23 +1,33 @@
 import { AxiosResponse } from 'axios';
 import { SDKError } from '../../common/error';
 import {
+  AddressBookEntry,
   AttachTxHashRequest,
   ContractDeploymentRequest,
   ContractDeploymentRequests,
+  CreateAddressBookEntryRequest,
   CreateContractDeploymentRequest,
   CreateFunctionCallRequestWithContractAddress,
   CreateFunctionCallRequestWithContractAlias,
   CreateFunctionCallRequestWithContractId,
   CreateWalletAuthorizationRequest,
+  DeleteAddressBookEntryRequest,
   DeployableContract,
   DeployableContractsRequest,
   DeployableContractsResult,
+  FetchAddressBookEntryByAliasRequest,
   FunctionCallRequest,
   FunctionCallRequests,
+  GetJwtByMessageRequest,
+  GetJwtRequest,
+  GetPayload,
+  GetPayloadRequest,
+  JwtToken,
   ReadFromContractByAddressRequest,
   ReadFromContractByAliasRequest,
   ReadFromContractByIdRequest,
   ReadFromContractResult,
+  UpdateAddressBookEntryRequest,
   WalletAuthorizationRequest,
   WalletAuthorizationRequests,
 } from '../types';
@@ -26,13 +36,13 @@ import { HttpClient } from './http-client';
 export class MainApi extends HttpClient {
   private static classInstance?: MainApi;
 
-  private constructor(baseURL: string, apiKey: string, projectId: string) {
-    super(baseURL, apiKey, projectId);
+  private constructor(baseURL: string, identityBaseURL: string, apiKey: string, projectId: string) {
+    super(baseURL, identityBaseURL, apiKey, projectId);
   }
 
-  public static init(baseURL: string, apiKey: string, projectId: string) {
+  public static init(baseURL: string, identityBaseURL: string, apiKey: string, projectId: string) {
     if (!this.classInstance) {
-      this.classInstance = new MainApi(baseURL, apiKey, projectId);
+      this.classInstance = new MainApi(baseURL, identityBaseURL, apiKey, projectId);
     }
   }
 
@@ -115,6 +125,12 @@ export class MainApi extends HttpClient {
       }
     );
     return result;
+  }
+
+  public async deleteContractDeploymentRequestById(id: string): Promise<void> {
+    return this.protectedInstance.delete<AxiosResponse>(
+      `deploy/${id}`
+    );
   }
 
   public async createFunctionCallRequest(
@@ -202,5 +218,104 @@ export class MainApi extends HttpClient {
       `deployable-contracts/${id}`
     );
     return result;
+  }
+
+  public async getPayload(
+    request?: GetPayloadRequest
+  ): Promise<GetPayload> {
+    const wallet = request?.address;
+    if (wallet) {
+      return this.identityServiceInstance.post<GetPayload>(
+        'authorize',
+        {
+          address: wallet
+        }
+      );
+    } else {
+      return this.identityServiceInstance.post<GetPayload>(
+        '/authorize/by-message'
+      );
+    }
+  }
+
+  public async getJwt(
+    request: GetJwtRequest
+  ): Promise<JwtToken> {
+    return this.identityServiceInstance.post<JwtToken>(
+      '/authorize/jwt',
+      request
+    );
+  }
+
+  public async getJwtByMessage(
+    request: GetJwtByMessageRequest
+  ): Promise<JwtToken> {
+    return this.identityServiceInstance.post<JwtToken>(
+      '/authorize/jwt/by-message',
+      request
+    );
+  }
+
+  public async createAddressBookEntry(
+    request: CreateAddressBookEntryRequest,
+    jwt: JwtToken
+  ): Promise<AddressBookEntry> {
+    return this.instance.post<AddressBookEntry>(
+      'address-book',
+      request,
+      {
+        headers: {
+          'Authorization': `Bearer ${jwt.access_token}`
+        }
+      }
+    );
+  }
+
+  public async updateAddressBookEntry(
+    request: UpdateAddressBookEntryRequest,
+    jwt: JwtToken
+  ): Promise<AddressBookEntry> {
+    return this.instance.patch<AddressBookEntry>(
+      `address-book/${request.id}`,
+      {
+        alias: request.alias,
+        address: request.address,
+        phone_number: request.phone_number,
+        email: request.email
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${jwt.access_token}`
+        }
+      }
+    );
+  }
+
+  public async deleteAddressBookEntry(
+    request: DeleteAddressBookEntryRequest,
+    jwt: JwtToken
+  ): Promise<void> {
+    return this.instance.delete<AxiosResponse>(
+      `address-book/${request.id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${jwt.access_token}`
+        }
+      }
+    );
+  }
+
+  public async fetchAddressBookEntryByAlias(
+    request: FetchAddressBookEntryByAliasRequest,
+    jwt: JwtToken
+  ): Promise<AddressBookEntry> {
+    return this.instance.get<AddressBookEntry>(
+      `address-book/by-alias/${request.alias}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${jwt.access_token}`
+        }
+      }
+    );
   }
 }

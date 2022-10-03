@@ -5,6 +5,8 @@ export interface CreateWalletAuthorizationRequest {
   redirect_url?: string;
   arbitrary_data?: Map<string, unknown>;
   screen_config?: ScreenConfig;
+  message_to_sign?: string;
+  store_indefinitely?: boolean;
 }
 
 export interface WalletAuthorizationRequests {
@@ -250,4 +252,63 @@ export interface DeployableContract {
 
 export interface DeployableContractsResult {
   deployable_contracts: DeployableContract[];
+}
+
+export interface GetPayloadRequest {
+  address?: string;
+}
+
+export interface GetPayload {
+  payload: string;
+}
+
+export interface GetJwtRequest {
+  address: string;
+  signed_payload: string;
+  chain_id?: number;
+}
+
+export interface GetJwtByMessageRequest {
+  address: string;
+  message_to_sign: string;
+  signed_payload: string;
+}
+
+export interface JwtToken {
+  access_token: string;
+  expires_in: string;
+  refresh_token: string;
+  refresh_token_expires_in: string;
+}
+
+export interface CreateAddressBookEntryRequest {
+  alias: string;
+  address: string;
+  phone_number?: string;
+  email?: string;
+}
+
+export interface UpdateAddressBookEntryRequest {
+  id: string,
+  alias: string;
+  address: string;
+  phone_number?: string;
+  email?: string;
+}
+
+export interface DeleteAddressBookEntryRequest {
+  id: string;
+}
+
+export interface FetchAddressBookEntryByAliasRequest {
+  alias: string;
+}
+
+export interface AddressBookEntry {
+  id: string;
+  alias: string;
+  address: string;
+  phone_number?: string;
+  email?: string;
+  created_at: Date;
 }

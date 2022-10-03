@@ -4,21 +4,30 @@ import { WalletAuthorizationAction } from './actions/WalletAuthorizationAction';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
+import { User } from './identity/User';
 import { CreateWalletAuthorizationRequest } from './types';
 
 export class Dev3SDK {
   private readonly BASE_URL =
-    'https://invest-api.ampnet.io/api/blockchain-api/v1';
+    'https://eth-staging.ampnet.io/api/blockchain-api/v1';
+  private readonly IDENTITY_BASE_URL =
+    'https://eth-staging.ampnet.io/api/identity';
 
   constructor(apiKey: string, projectId: string) {
-    MainApi.init(this.BASE_URL, apiKey, projectId);
+    MainApi.init(this.BASE_URL, this.IDENTITY_BASE_URL, apiKey, projectId);
   }
 
-  async authorize(
+  async authorizeWallet(
     options?: CreateWalletAuthorizationRequest
   ): Promise<WalletAuthorizationAction> {
-    const result = await MainApi.instance().createWalletAuthorizationRequest(options ?? {});
-    return new WalletAuthorizationAction(result);
+    const payloadResponse = await MainApi.instance().getPayload();
+    const generatedAction = await MainApi.instance().createWalletAuthorizationRequest(
+      {
+        ...options,
+        message_to_sign: payloadResponse.payload
+      }
+    );
+    return new WalletAuthorizationAction(generatedAction);
   }
 
   async getManifests(
@@ -60,6 +69,10 @@ export class Dev3SDK {
   async getContractById(id: string): Promise<Contract> {
     const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
     return new Contract(result);
+  }
+  
+  async deleteContractById(id: string): Promise<void> {
+    return MainApi.instance().deleteContractDeploymentRequestById(id);
   }
 
   async getContractCallById(id: string): Promise<ContractCallAction> {
