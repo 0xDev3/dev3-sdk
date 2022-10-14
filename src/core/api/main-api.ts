@@ -233,7 +233,7 @@ export class MainApi extends HttpClient {
       );
     } else {
       return this.identityServiceInstance.post<GetPayload>(
-        '/authorize/by-message'
+        'authorize/by-message'
       );
     }
   }
@@ -242,7 +242,7 @@ export class MainApi extends HttpClient {
     request: GetJwtRequest
   ): Promise<JwtToken> {
     return this.identityServiceInstance.post<JwtToken>(
-      '/authorize/jwt',
+      'authorize/jwt',
       request
     );
   }
@@ -251,7 +251,7 @@ export class MainApi extends HttpClient {
     request: GetJwtByMessageRequest
   ): Promise<JwtToken> {
     return this.identityServiceInstance.post<JwtToken>(
-      '/authorize/jwt/by-message',
+      'authorize/jwt/by-message',
       request
     );
   }

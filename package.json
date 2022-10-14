@@ -14,7 +14,7 @@
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier-format": "prettier 'src/**/*.ts' --write",
     "build": "rm -rf ./dist && tsup && tsc",
-    "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --require ts-node/register ./test/**/*.test.ts"
+    "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --require ts-node/register ./test/sdk.test.ts"
   },
   "keywords": [
     "dev3",
