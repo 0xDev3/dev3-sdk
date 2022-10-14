@@ -4,14 +4,13 @@ import { WalletAuthorizationAction } from './actions/WalletAuthorizationAction';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
-import { User } from './identity/User';
 import { CreateWalletAuthorizationRequest } from './types';
 
 export class Dev3SDK {
   private readonly BASE_URL =
-    'https://eth-staging.ampnet.io/api/blockchain-api/v1';
+    'https://invest-api.ampnet.io/api/blockchain-api/v1';
   private readonly IDENTITY_BASE_URL =
-    'https://eth-staging.ampnet.io/api/identity';
+    'https://invest-api.ampnet.io/api/identity';
 
   constructor(apiKey: string, projectId: string) {
     MainApi.init(this.BASE_URL, this.IDENTITY_BASE_URL, apiKey, projectId);
