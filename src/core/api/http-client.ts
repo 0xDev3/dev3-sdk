@@ -39,6 +39,10 @@ export abstract class HttpClient {
       this._handleResponse,
       this._handleError
     );
+    this.identityServiceInstance.interceptors.response.use(
+      this._handleResponse,
+      this._handleError
+    );
   };
 
   private _handleResponse = ({ data }: AxiosResponse) => data;
