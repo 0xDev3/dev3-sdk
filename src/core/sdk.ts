@@ -17,7 +17,7 @@ export class Dev3SDK {
   }
 
   async authorizeWallet(
-    options?: CreateWalletAuthorizationRequest
+    options: CreateWalletAuthorizationRequest
   ): Promise<WalletAuthorizationAction> {
     const payloadResponse = await MainApi.instance().getPayload();
     const generatedAction = await MainApi.instance().createWalletAuthorizationRequest(
