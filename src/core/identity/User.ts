@@ -1,5 +1,5 @@
 import { MainApi } from "../api/main-api";
-import { AddressBookEntry, CreateAddressBookEntryRequest, JwtToken, UpdateAddressBookEntryRequest } from "../types";
+import { AddressBookEntries, AddressBookEntry, CreateAddressBookEntryRequest, JwtToken, UpdateAddressBookEntryRequest } from "../types";
 
 export class User {
 
@@ -26,6 +26,13 @@ export class User {
     public async getFromAddressBook(alias: string): Promise<AddressBookEntry> {
         return MainApi.instance().fetchAddressBookEntryByAlias(
             { alias },
+            this.jwt
+        );
+    }
+
+    public async getAllFromAddressBook(): Promise<AddressBookEntries> {
+        return MainApi.instance().fetchAddressBookEntries(
+            this.wallet,
             this.jwt
         );
     }

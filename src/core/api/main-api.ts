@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { SDKError } from '../../common/error';
 import {
+  AddressBookEntries,
   AddressBookEntry,
   AttachTxHashRequest,
   ContractDeploymentRequest,
@@ -311,6 +312,20 @@ export class MainApi extends HttpClient {
   ): Promise<AddressBookEntry> {
     return this.instance.get<AddressBookEntry>(
       `address-book/by-alias/${request.alias}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${jwt.access_token}`
+        }
+      }
+    );
+  }
+
+  public async fetchAddressBookEntries(
+    forWalletAddress: string,
+    jwt: JwtToken
+  ): Promise<AddressBookEntries> {
+    return this.instance.get<AddressBookEntries>(
+      `address-book/by-wallet-address/${forWalletAddress}`,
       {
         headers: {
           'Authorization': `Bearer ${jwt.access_token}`

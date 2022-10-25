@@ -312,3 +312,7 @@ export interface AddressBookEntry {
   email?: string;
   created_at: Date;
 }
+
+export interface AddressBookEntries {
+  entries: AddressBookEntry[]
+}
