@@ -1,10 +1,12 @@
 import { ContractCallAction } from './actions/ContractCallAction';
 import { ContractDeployAction } from './actions/ContractDeployAction';
+import { NativeSendRequestAction } from './actions/NativeSendRequestAction';
+import { TokenSendRequestAction } from './actions/TokenSendRequestAction';
 import { WalletAuthorizationAction } from './actions/WalletAuthorizationAction';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
-import { CreateWalletAuthorizationRequest } from './types';
+import { AssetType, CreateWalletAuthorizationRequest } from './types';
 
 export class Dev3SDK {
   private readonly BASE_URL =
@@ -82,6 +84,40 @@ export class Dev3SDK {
   async getContractDeployAction(id: string): Promise<ContractDeployAction> {
     const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
     return new ContractDeployAction(result);
-  } 
+  }
+
+  async requestTokens(
+    toAddress: string,
+    token: string,
+    amount: string,
+    fromAddress?: string
+  ): Promise<TokenSendRequestAction> {
+    const result = await MainApi.instance().createAssetSendRequest(
+      {
+        asset_type: AssetType.TOKEN,
+        recipient_address: toAddress,
+        token_address: token,
+        amount: amount,
+        sender_address: fromAddress
+      }
+    );
+    return new TokenSendRequestAction(result);
+  }
+
+  async requestNativeCoins(
+    toAddress: string,
+    amount: string,
+    fromAddress?: string
+  ): Promise<NativeSendRequestAction> {
+    const result = await MainApi.instance().createAssetSendRequest(
+      {
+        asset_type: AssetType.NATIVE,
+        recipient_address: toAddress,
+        amount: amount,
+        sender_address: fromAddress
+      }
+    );
+    return new NativeSendRequestAction(result);
+  }
 
 }

@@ -3,10 +3,13 @@ import { SDKError } from '../../common/error';
 import {
   AddressBookEntries,
   AddressBookEntry,
+  AssetSendRequest,
+  AssetSendRequests,
   AttachTxHashRequest,
   ContractDeploymentRequest,
   ContractDeploymentRequests,
   CreateAddressBookEntryRequest,
+  CreateAssetSendRequest,
   CreateContractDeploymentRequest,
   CreateFunctionCallRequestWithContractAddress,
   CreateFunctionCallRequestWithContractAlias,
@@ -331,6 +334,39 @@ export class MainApi extends HttpClient {
           'Authorization': `Bearer ${jwt.access_token}`
         }
       }
+    );
+  }
+
+  public async createAssetSendRequest(
+    request: CreateAssetSendRequest
+  ): Promise<AssetSendRequest> {
+    return this.protectedInstance.post<AssetSendRequest>(
+      'send',
+      request
+    );
+  }
+
+  public async fetchAssetSendRequest(id: string): Promise<AssetSendRequest> {
+    return this.instance.get<AssetSendRequest>(
+      `send/${id}`
+    );
+  }
+
+  public async fetchAllAssetSendRequests(): Promise<AssetSendRequests> {
+    return this.instance.get<AssetSendRequests>(
+      `send/by-project/${this.projectId}`
+    );
+  }
+
+  public async fetchAssetSendRequestsBySender(senderAddress: string): Promise<AssetSendRequests> {
+    return this.instance.get<AssetSendRequests>(
+      `send/by-sender/${senderAddress}`
+    );
+  }
+
+  public async fetchAssetSendRequestsByRecipient(recipientAddress: string): Promise<AssetSendRequests> {
+    return this.instance.get<AssetSendRequests>(
+      `send/by-recipient/${recipientAddress}`
     );
   }
 }

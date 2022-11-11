@@ -316,3 +316,40 @@ export interface AddressBookEntry {
 export interface AddressBookEntries {
   entries: AddressBookEntry[]
 }
+
+export enum AssetType {
+  NATIVE = 'NATIVE',
+  TOKEN = 'TOKEN',
+}
+
+export interface CreateAssetSendRequest {
+  asset_type: AssetType;
+  recipient_address: string;
+  amount: string;
+  token_address?: string;
+  redirect_url?: string;
+  sender_address?: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+}
+
+export interface AssetSendRequest {
+  id: string;
+  project_id: string;
+  status: RequestStatus;
+  chain_id: number;
+  token_address?: string;
+  asset_type: AssetType;
+  amount: string;
+  sender_address?: string;
+  recipient_address: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  redirect_url: string;
+  send_tx: TxData;
+  created_at: string;
+}
+
+export interface AssetSendRequests {
+  requests: AssetSendRequest[];
+}
