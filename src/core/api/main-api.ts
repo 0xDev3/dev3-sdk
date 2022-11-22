@@ -210,6 +210,7 @@ export class MainApi extends HttpClient {
       params: {
         tags: request.tags.join(','),
         implements: request.implements.join(','),
+        projectId: this.projectId
       },
     });
     return result;
