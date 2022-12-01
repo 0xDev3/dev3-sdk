@@ -1,5 +1,5 @@
 import { WalletAuthorizationRequest, RequestStatus } from "../types";
-import { poll } from "../helpers/util";
+import { poll, ensureBrowser } from "../helpers/util";
 import { MainApi } from "../api/main-api";
 import { User } from "../identity/User";
 import { SDKError } from "../../common/error";
@@ -22,7 +22,26 @@ export class WalletAuthorizationAction {
     
     get wallet(): string | undefined {
         return this.authorizationRequest.wallet_address;
-    }    
+    }
+
+    public present(): Promise<User> {
+        ensureBrowser();
+        let div = document.createElement('div');
+        div.setAttribute("style", "position:fixed;top:0;left:0;background:rgba(0,0,0,0.6);z-index:1;width:100%;height:100%;pointer-events:none;display:block;");
+        div.innerHTML = `
+            <iframe style="width:80%;margin:auto;" src="${this.actionUrl}" scrolling="no" frameborder="0px"></iframe>
+        `;
+        document.body.appendChild(div);
+        return new Promise<User>((resolve, reject) => {
+            this.awaitResult().then(result => {
+                div.remove();
+                resolve(result);
+            }).catch(err => {
+                div.remove();
+                reject(err);
+            });
+        });
+    }
 
     public async awaitResult(): Promise<User> {
         return new Promise((resolve, reject) => {

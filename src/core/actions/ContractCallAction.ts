@@ -1,5 +1,5 @@
 import { MainApi } from '../api/main-api';
-import { poll } from '../helpers/util';
+import { poll, ensureBrowser } from '../helpers/util';
 import {
     FunctionCallRequest,
     RequestStatus,
@@ -27,6 +27,25 @@ export class ContractCallAction {
 
     get transactionCaller(): string | undefined {
         return this.callRequest.caller_address;
+    }
+
+    public present(): Promise<ContractCallAction> {
+        ensureBrowser();
+        let div = document.createElement('div');
+        div.setAttribute("style", "position:fixed;top:0;left:0;background:rgba(0,0,0,0.6);z-index:1;width:100%;height:100%;display:block;padding-top:32px;");
+        div.innerHTML = `
+            <iframe style="width:100%;margin:auto;max-width:500px;display:block;border:none;border-radius:16px;height:100%;max-height:700px;" src="${this.actionUrl}" scrolling="no" frameborder="0px"></iframe>
+        `;
+        document.body.appendChild(div);
+        return new Promise<ContractCallAction>((resolve, reject) => {
+            this.awaitResult().then(result => {
+                div.remove();
+                resolve(result);
+            }).catch(err => {
+                div.remove();
+                reject(err);
+            });
+        });
     }
 
     public awaitResult(): Promise<ContractCallAction> {

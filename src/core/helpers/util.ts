@@ -1,3 +1,5 @@
+import { SDKError } from "../../common/error";
+
 const defaultPollIntervalSeconds = 3;
 
 export async function poll<T>(
@@ -18,3 +20,9 @@ export const wait = function (ms: number) {
     setTimeout(resolve, ms);
   });
 };
+
+export function ensureBrowser(): void {
+  if (typeof window === 'undefined') {
+    throw new SDKError("This feature is only available in browser environment!");
+  }
+}
