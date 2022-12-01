@@ -1,6 +1,6 @@
 {
     "name": "dev3-sdk",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "SDK for interacting with the 0xDev3 platform.",
     "main": "dist/node/index.js",
     "module": "dist/node/index.js",
@@ -27,7 +27,6 @@
     "license": "ISC",
     "devDependencies": {
         "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
-        "@thirdweb-dev/sdk": "^3.0.4",
         "@types/chai": "^4.3.3",
         "@types/mocha": "^9.1.1",
         "@typescript-eslint/eslint-plugin": "^5.36.1",
