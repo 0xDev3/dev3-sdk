@@ -7,6 +7,7 @@ import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
 import { AssetType, CreateWalletAuthorizationRequest } from './types';
+import * as ExecEnv from '../execenv/modal';
 
 export class Dev3SDK {
   private readonly BASE_URL =
@@ -118,5 +119,9 @@ export class Dev3SDK {
       sender_address: fromAddress,
     });
     return new NativeSendRequestAction(result);
+  }
+
+  async present(actionUrl: string): Promise<ExecEnv.SupportedActionType> {
+    return ExecEnv.present(actionUrl);
   }
 }

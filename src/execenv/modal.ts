@@ -8,7 +8,7 @@ import { MainApi } from '../core/api/main-api';
 import { ensureBrowser, poll } from '../core/helpers/util';
 import { RequestStatus } from '../core/types';
 
-type SupportedActionType =
+export type SupportedActionType =
   | ContractDeployAction
   | ContractCallAction
   | WalletAuthorizationAction
