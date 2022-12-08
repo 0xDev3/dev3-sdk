@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber } from '@ethersproject/bignumber';
 
 export interface CreateWalletAuthorizationRequest {
   wallet_address?: string;
@@ -289,7 +289,7 @@ export interface CreateAddressBookEntryRequest {
 }
 
 export interface UpdateAddressBookEntryRequest {
-  id: string,
+  id: string;
   alias: string;
   address: string;
   phone_number?: string;
@@ -314,7 +314,7 @@ export interface AddressBookEntry {
 }
 
 export interface AddressBookEntries {
-  entries: AddressBookEntry[]
+  entries: AddressBookEntry[];
 }
 
 export enum AssetType {

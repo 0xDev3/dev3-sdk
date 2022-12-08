@@ -10,7 +10,6 @@ import { MapperService } from '../services/mapper-service';
 import { SDKError } from '../../common/error';
 
 export class Contract {
-  
   private readonly defaultCaller = '0x0000000000000000000000000000000000000000';
   private readonly defaultEthAmount = '0';
 

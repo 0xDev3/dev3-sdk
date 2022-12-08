@@ -40,13 +40,28 @@ import { HttpClient } from './http-client';
 export class MainApi extends HttpClient {
   private static classInstance?: MainApi;
 
-  private constructor(baseURL: string, identityBaseURL: string, apiKey: string, projectId: string) {
+  private constructor(
+    baseURL: string,
+    identityBaseURL: string,
+    apiKey: string,
+    projectId: string
+  ) {
     super(baseURL, identityBaseURL, apiKey, projectId);
   }
 
-  public static init(baseURL: string, identityBaseURL: string, apiKey: string, projectId: string) {
+  public static init(
+    baseURL: string,
+    identityBaseURL: string,
+    apiKey: string,
+    projectId: string
+  ) {
     if (!this.classInstance) {
-      this.classInstance = new MainApi(baseURL, identityBaseURL, apiKey, projectId);
+      this.classInstance = new MainApi(
+        baseURL,
+        identityBaseURL,
+        apiKey,
+        projectId
+      );
     }
   }
 
@@ -60,10 +75,11 @@ export class MainApi extends HttpClient {
   public async createWalletAuthorizationRequest(
     request: CreateWalletAuthorizationRequest
   ): Promise<WalletAuthorizationRequest> {
-    const result = await this.protectedInstance.post<WalletAuthorizationRequest>(
-      'wallet-authorization',
-      request
-    );
+    const result =
+      await this.protectedInstance.post<WalletAuthorizationRequest>(
+        'wallet-authorization',
+        request
+      );
     return result;
   }
 
@@ -71,7 +87,7 @@ export class MainApi extends HttpClient {
     id: string
   ): Promise<WalletAuthorizationRequest> {
     const result = await this.instance.get<WalletAuthorizationRequest>(
-      `wallet-authorization/${id}` 
+      `wallet-authorization/${id}`
     );
     return result;
   }
@@ -132,9 +148,7 @@ export class MainApi extends HttpClient {
   }
 
   public async deleteContractDeploymentRequestById(id: string): Promise<void> {
-    return this.protectedInstance.delete<AxiosResponse>(
-      `deploy/${id}`
-    );
+    return this.protectedInstance.delete<AxiosResponse>(`deploy/${id}`);
   }
 
   public async createFunctionCallRequest(
@@ -210,7 +224,7 @@ export class MainApi extends HttpClient {
       params: {
         tags: request.tags.join(','),
         implements: request.implements.join(','),
-        projectId: this.projectId
+        projectId: this.projectId,
       },
     });
     return result;
@@ -225,17 +239,12 @@ export class MainApi extends HttpClient {
     return result;
   }
 
-  public async getPayload(
-    request?: GetPayloadRequest
-  ): Promise<GetPayload> {
+  public async getPayload(request?: GetPayloadRequest): Promise<GetPayload> {
     const wallet = request?.address;
     if (wallet) {
-      return this.identityServiceInstance.post<GetPayload>(
-        'authorize',
-        {
-          address: wallet
-        }
-      );
+      return this.identityServiceInstance.post<GetPayload>('authorize', {
+        address: wallet,
+      });
     } else {
       return this.identityServiceInstance.post<GetPayload>(
         'authorize/by-message'
@@ -243,9 +252,7 @@ export class MainApi extends HttpClient {
     }
   }
 
-  public async getJwt(
-    request: GetJwtRequest
-  ): Promise<JwtToken> {
+  public async getJwt(request: GetJwtRequest): Promise<JwtToken> {
     return this.identityServiceInstance.post<JwtToken>(
       'authorize/jwt',
       request
@@ -265,15 +272,11 @@ export class MainApi extends HttpClient {
     request: CreateAddressBookEntryRequest,
     jwt: JwtToken
   ): Promise<AddressBookEntry> {
-    return this.instance.post<AddressBookEntry>(
-      'address-book',
-      request,
-      {
-        headers: {
-          'Authorization': `Bearer ${jwt.access_token}`
-        }
-      }
-    );
+    return this.instance.post<AddressBookEntry>('address-book', request, {
+      headers: {
+        Authorization: `Bearer ${jwt.access_token}`,
+      },
+    });
   }
 
   public async updateAddressBookEntry(
@@ -286,12 +289,12 @@ export class MainApi extends HttpClient {
         alias: request.alias,
         address: request.address,
         phone_number: request.phone_number,
-        email: request.email
+        email: request.email,
       },
       {
         headers: {
-          'Authorization': `Bearer ${jwt.access_token}`
-        }
+          Authorization: `Bearer ${jwt.access_token}`,
+        },
       }
     );
   }
@@ -300,14 +303,11 @@ export class MainApi extends HttpClient {
     request: DeleteAddressBookEntryRequest,
     jwt: JwtToken
   ): Promise<void> {
-    return this.instance.delete<AxiosResponse>(
-      `address-book/${request.id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${jwt.access_token}`
-        }
-      }
-    );
+    return this.instance.delete<AxiosResponse>(`address-book/${request.id}`, {
+      headers: {
+        Authorization: `Bearer ${jwt.access_token}`,
+      },
+    });
   }
 
   public async fetchAddressBookEntryByAlias(
@@ -318,8 +318,8 @@ export class MainApi extends HttpClient {
       `address-book/by-alias/${request.alias}`,
       {
         headers: {
-          'Authorization': `Bearer ${jwt.access_token}`
-        }
+          Authorization: `Bearer ${jwt.access_token}`,
+        },
       }
     );
   }
@@ -332,8 +332,8 @@ export class MainApi extends HttpClient {
       `address-book/by-wallet-address/${forWalletAddress}`,
       {
         headers: {
-          'Authorization': `Bearer ${jwt.access_token}`
-        }
+          Authorization: `Bearer ${jwt.access_token}`,
+        },
       }
     );
   }
@@ -341,16 +341,11 @@ export class MainApi extends HttpClient {
   public async createAssetSendRequest(
     request: CreateAssetSendRequest
   ): Promise<AssetSendRequest> {
-    return this.protectedInstance.post<AssetSendRequest>(
-      'send',
-      request
-    );
+    return this.protectedInstance.post<AssetSendRequest>('send', request);
   }
 
   public async fetchAssetSendRequest(id: string): Promise<AssetSendRequest> {
-    return this.instance.get<AssetSendRequest>(
-      `send/${id}`
-    );
+    return this.instance.get<AssetSendRequest>(`send/${id}`);
   }
 
   public async fetchAllAssetSendRequests(): Promise<AssetSendRequests> {
@@ -359,13 +354,17 @@ export class MainApi extends HttpClient {
     );
   }
 
-  public async fetchAssetSendRequestsBySender(senderAddress: string): Promise<AssetSendRequests> {
+  public async fetchAssetSendRequestsBySender(
+    senderAddress: string
+  ): Promise<AssetSendRequests> {
     return this.instance.get<AssetSendRequests>(
       `send/by-sender/${senderAddress}`
     );
   }
 
-  public async fetchAssetSendRequestsByRecipient(recipientAddress: string): Promise<AssetSendRequests> {
+  public async fetchAssetSendRequestsByRecipient(
+    recipientAddress: string
+  ): Promise<AssetSendRequests> {
     return this.instance.get<AssetSendRequests>(
       `send/by-recipient/${recipientAddress}`
     );

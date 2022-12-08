@@ -1,4 +1,4 @@
-import { SDKError } from "../../common/error";
+import { SDKError } from '../../common/error';
 
 const defaultPollIntervalSeconds = 3;
 
@@ -23,6 +23,8 @@ export const wait = function (ms: number) {
 
 export function ensureBrowser(): void {
   if (typeof window === 'undefined') {
-    throw new SDKError("This feature is only available in browser environment!");
+    throw new SDKError(
+      'This feature is only available in browser environment!'
+    );
   }
 }

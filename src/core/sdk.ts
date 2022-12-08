@@ -22,12 +22,11 @@ export class Dev3SDK {
     options: CreateWalletAuthorizationRequest
   ): Promise<WalletAuthorizationAction> {
     const payloadResponse = await MainApi.instance().getPayload();
-    const generatedAction = await MainApi.instance().createWalletAuthorizationRequest(
-      {
+    const generatedAction =
+      await MainApi.instance().createWalletAuthorizationRequest({
         ...options,
-        message_to_sign: payloadResponse.payload
-      }
-    );
+        message_to_sign: payloadResponse.payload,
+      });
     return new WalletAuthorizationAction(generatedAction);
   }
 
@@ -63,15 +62,18 @@ export class Dev3SDK {
   }
 
   async getContractByAlias(alias: string): Promise<Contract> {
-    const result = await MainApi.instance().fetchContractDeploymentRequestByAlias(alias);
+    const result =
+      await MainApi.instance().fetchContractDeploymentRequestByAlias(alias);
     return new Contract(result);
   }
 
   async getContractById(id: string): Promise<Contract> {
-    const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
+    const result = await MainApi.instance().fetchContractDeploymentRequestById(
+      id
+    );
     return new Contract(result);
   }
-  
+
   async deleteContractById(id: string): Promise<void> {
     return MainApi.instance().deleteContractDeploymentRequestById(id);
   }
@@ -82,7 +84,9 @@ export class Dev3SDK {
   }
 
   async getContractDeployAction(id: string): Promise<ContractDeployAction> {
-    const result = await MainApi.instance().fetchContractDeploymentRequestById(id);
+    const result = await MainApi.instance().fetchContractDeploymentRequestById(
+      id
+    );
     return new ContractDeployAction(result);
   }
 
@@ -92,15 +96,13 @@ export class Dev3SDK {
     amount: string,
     fromAddress?: string
   ): Promise<TokenSendRequestAction> {
-    const result = await MainApi.instance().createAssetSendRequest(
-      {
-        asset_type: AssetType.TOKEN,
-        recipient_address: toAddress,
-        token_address: token,
-        amount: amount,
-        sender_address: fromAddress
-      }
-    );
+    const result = await MainApi.instance().createAssetSendRequest({
+      asset_type: AssetType.TOKEN,
+      recipient_address: toAddress,
+      token_address: token,
+      amount: amount,
+      sender_address: fromAddress,
+    });
     return new TokenSendRequestAction(result);
   }
 
@@ -109,15 +111,12 @@ export class Dev3SDK {
     amount: string,
     fromAddress?: string
   ): Promise<NativeSendRequestAction> {
-    const result = await MainApi.instance().createAssetSendRequest(
-      {
-        asset_type: AssetType.NATIVE,
-        recipient_address: toAddress,
-        amount: amount,
-        sender_address: fromAddress
-      }
-    );
+    const result = await MainApi.instance().createAssetSendRequest({
+      asset_type: AssetType.NATIVE,
+      recipient_address: toAddress,
+      amount: amount,
+      sender_address: fromAddress,
+    });
     return new NativeSendRequestAction(result);
   }
-
 }

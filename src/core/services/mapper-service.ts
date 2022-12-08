@@ -23,13 +23,15 @@ export class MapperService {
     functionValues: any[],
     manifest: DeployableContract
   ): EncodedFunctionParameter[] {
-    if (functionValues.length === 0) { return []; }
+    if (functionValues.length === 0) {
+      return [];
+    }
     const constructorDecorator = this.getConstructorDecoratorFromManifest(
       manifest,
       functionValues.length
     );
     const inputDecorators = constructorDecorator.inputs;
-    return this.encodeInputsImpl(functionValues, inputDecorators)
+    return this.encodeInputsImpl(functionValues, inputDecorators);
   }
 
   public encodeInputs(
@@ -37,7 +39,9 @@ export class MapperService {
     functionValues: any[],
     manifest: DeployableContract
   ): EncodedFunctionParameter[] {
-    if (functionValues.length === 0) { return []; }
+    if (functionValues.length === 0) {
+      return [];
+    }
     const functionDecorator = this.getFunctionDecoratorFromManifest(
       functionName,
       manifest
