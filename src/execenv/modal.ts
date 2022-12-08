@@ -106,10 +106,12 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
         }
     `;
   document.getElementsByTagName('head')[0].appendChild(css);
-  
+
   const containerDiv = document.createElement('div');
   containerDiv.className = 'dev3-modal-container';
-  containerDiv.innerHTML = `<iframe class='dev3-modal-frame' src="${actionUrl + '?sdk=true'}"/>`;
+  containerDiv.innerHTML = `<iframe class='dev3-modal-frame' src="${
+    actionUrl + '?sdk=true'
+  }"/>`;
   const cancelButton = document.createElement('button');
   cancelButton.className = 'dev3-cancel-button';
   cancelButton.innerHTML = `
@@ -120,7 +122,7 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
   cancelButton.onclick = () => {
     containerDiv.remove();
     css.remove();
-  }
+  };
   containerDiv.appendChild(cancelButton);
   document.body.appendChild(containerDiv);
 
