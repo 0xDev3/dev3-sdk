@@ -10,13 +10,13 @@ import { AssetType, CreateWalletAuthorizationRequest } from './types';
 import * as ExecEnv from '../execenv/modal';
 
 export class Dev3SDK {
-  private readonly BASE_URL =
-    'https://invest-api.ampnet.io/api/blockchain-api/v1';
-  private readonly IDENTITY_BASE_URL =
-    'https://invest-api.ampnet.io/api/identity';
-
-  constructor(apiKey: string, projectId: string) {
-    MainApi.init(this.BASE_URL, this.IDENTITY_BASE_URL, apiKey, projectId);
+  constructor(
+    apiKey: string,
+    projectId: string,
+    baseApiUrl = 'https://invest-api.ampnet.io/api/blockchain-api/v1',
+    identityApiUrl = 'https://invest-api.ampnet.io/api/identity'
+  ) {
+    MainApi.init(baseApiUrl, identityApiUrl, apiKey, projectId);
   }
 
   async authorizeWallet(
