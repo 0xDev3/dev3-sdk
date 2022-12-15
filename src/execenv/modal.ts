@@ -104,7 +104,7 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
           color: #f2f7ff !important;
           font-size: 2rem !important;
           background: transparent !important;
-          border: !none;
+          border: none !important;
         }
     `;
   document.getElementsByTagName('head')[0].appendChild(css);
