@@ -4,7 +4,7 @@
     //   "experimentalDecorators": true,
       "module": "commonjs",
       "target": "es2015",
-      "lib": ["es2017"],
+      "lib": ["es2017", "dom"],
       "declaration": false,
       "noImplicitAny": false,
       "removeComments": true,

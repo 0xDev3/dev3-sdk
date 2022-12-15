@@ -68,41 +68,43 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
   const css = document.createElement('style');
   css.innerHTML = `
         .dev3-modal-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-            display: block;
-            padding: 32px 16px;
-            -ms-overflow-style: none;  /* Internet Explorer 10+ */
-            scrollbar-width: none;  /* Firefox */
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            background: rgba(0,0,0,0.6) !important;
+            z-index: 1 !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            padding: 32px 16px !important;
+            -ms-overflow-style: none !important;  /* Internet Explorer 10+ */
+            scrollbar-width: none !important;  /* Firefox */
         }
 
         .dev3-modal-container::-webkit-scrollbar { 
-            display: none;  /* Safari and Chrome */
+            display: none !important;  /* Safari and Chrome */
         }
 
         .dev3-modal-frame {
-            width: 100%;
-            margin: auto;
-            max-width: 500px;
-            display: block;
-            border: none;
-            border-radius: 16px;
-            height: 100%;
-            max-height: 700px;
+            width: 100% !important;
+            margin: auto !important;
+            max-width: 500px !important;
+            display: block !important;
+            border: none !important;
+            border-radius: 16px !important;
+            height: 100% !important;
+            max-height: 700px !important;
         }
 
         .dev3-cancel-button {
-          position: absolute;
-          right: 24px;
-          top: 10px;
-          z-index: 1;
-          color: #f2f7ff;
-          font-size: 2rem;
+          position: absolute !important;
+          right: 24px !important;
+          top: 10px !important;
+          z-index: 1 !important;
+          color: #f2f7ff !important;
+          font-size: 2rem !important;
+          background: transparent !important;
+          border: !none;
         }
     `;
   document.getElementsByTagName('head')[0].appendChild(css);
