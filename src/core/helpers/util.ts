@@ -21,8 +21,12 @@ export const wait = function (ms: number) {
   });
 };
 
+export function isBrowser(): boolean {
+  return (typeof window !== 'undefined');
+}
+
 export function ensureBrowser(): void {
-  if (typeof window === 'undefined') {
+  if (!isBrowser()) {
     throw new SDKError(
       'This feature is only available in browser environment!'
     );

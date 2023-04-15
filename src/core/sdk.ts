@@ -8,8 +8,21 @@ import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
 import { AssetType, CreateWalletAuthorizationRequest } from './types';
 import * as ExecEnv from '../execenv/modal';
+import * as ExecEnvProvider from '../execenv/provider';
 
 export class Dev3SDK {
+
+  static attach(
+    apiKey: string,
+    projectId: string,
+    baseApiUrl = 'https://invest-api.ampnet.io/api/blockchain-api/v1',
+    identityApiUrl = 'https://invest-api.ampnet.io/api/identity'
+  ): Dev3SDK {
+    const sdk = new Dev3SDK(apiKey, projectId, baseApiUrl, identityApiUrl);
+    ExecEnvProvider.attach(sdk);
+    return sdk;
+  }
+
   constructor(
     apiKey: string,
     projectId: string,
@@ -124,4 +137,5 @@ export class Dev3SDK {
   async present(actionUrl: string): Promise<ExecEnv.SupportedActionType> {
     return ExecEnv.present(actionUrl);
   }
+
 }
