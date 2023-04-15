@@ -72,7 +72,7 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
             top: 0 !important;
             left: 0 !important;
             background: rgba(0,0,0,0.6) !important;
-            z-index: 1 !important;
+            z-index: 999999 !important;
             width: 100% !important;
             height: 100% !important;
             display: block !important;
