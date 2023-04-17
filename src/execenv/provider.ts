@@ -2,7 +2,6 @@ import { ensureBrowser } from "../core/helpers/util";
 import { Dev3SDK } from "../core/sdk";
 
 let proxy: any;
-let provider = (window as any).ethereum;
 let connectedAccounts: string[];
 
 export function attach(sdk: Dev3SDK) {
@@ -12,8 +11,7 @@ export function attach(sdk: Dev3SDK) {
     Object.defineProperty(window, "ethereum", {
         get() {
             if (!proxy) {
-                proxy = new Proxy(provider, handler);
-                provider = undefined;
+                proxy = new Proxy((window as any).ethereum, handler);
                 console.log("Dev3 Middleware attached!");
             }
             return proxy;
