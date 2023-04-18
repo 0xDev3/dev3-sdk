@@ -25,6 +25,11 @@ const sdk = new Dev3SDK("your-api-key", "your-project-id");
 
 The `"your-api-key"` and `"your-project-id"` fields can be found on your project details page after you go to the [demo platform](demo.dev3.sh) and create a new project.
 
+## Chainlink SDK
+
+While using the Dev3 SDK you will automatically get an access to the Chainlink Data Feeds by following the simple intrctions in the
+[Chainlink docs](./docs/CHAINLINK.md).
+
 ## Build
 
 Make sure you update your environment to NodeJS v16 before running the steps below.
