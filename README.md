@@ -27,7 +27,7 @@ The `"your-api-key"` and `"your-project-id"` fields can be found on your project
 
 ## Chainlink SDK
 
-While using the Dev3 SDK you will automatically get an access to the Chainlink Data Feeds by following the simple intrctions in the
+While using the Dev3 SDK you will automatically get an access to the Chainlink Data Feeds by following the simple instructions in the
 [Chainlink docs](./docs/CHAINLINK.md).
 
 ## Build

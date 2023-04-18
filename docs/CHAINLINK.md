@@ -1,6 +1,6 @@
 # Dev3 Chainlink SDK
 
-Dev3 Chainlink module is a fully open source Typescript SDK which enables any frontend developer to fetch the prices of various assets through Chainlink DataFeeds.
+Dev3 Chainlink SDK module is a fully open source Typescript SDK which enables any frontend developer to fetch the prices of various assets through Chainlink DataFeeds.
 Users can fetch price pairs, NFT floor price information & more...
 
 ## Getting started
@@ -53,6 +53,10 @@ export interface RoundDataModel {
     dataFeedName?: string;
 }
 ```
+
+## Source code
+
+The source code for this extension is extracted to the [GitHub repo](https://github.com/0xDev3/dev3-chainlink-sdk) so you can also use it as a standalone module.
 
 ## License
 
