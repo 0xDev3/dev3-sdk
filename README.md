@@ -1,7 +1,7 @@
 # Dev3 SDK (TypeScript)
 
 SDK built for interacting with the Dev3 platform.
-The demo version of the platform is available [here](demo.dev3.sh).
+The demo version of the platform is available [here](app.dev3.sh).
 
 The Dev3 platform provides a nice UI to interact with the blockchain, deploy new or import existing smart contracts and call various smart contrac functions on a click.
 
