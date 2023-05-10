@@ -1,7 +1,7 @@
 # Dev3 SDK (TypeScript)
 
 SDK built for interacting with the Dev3 platform.
-The demo version of the platform is available [here](demo.dev3.sh).
+The demo version of the platform is available [here](app.dev3.sh).
 
 The Dev3 platform provides a nice UI to interact with the blockchain, deploy new or import existing smart contracts and call various smart contrac functions on a click.
 
@@ -23,7 +23,7 @@ const { Dev3SDK } = require("dev3-sdk")
 const sdk = new Dev3SDK("your-api-key", "your-project-id"); 
 ```
 
-The `"your-api-key"` and `"your-project-id"` fields can be found on your project details page after you go to the [demo platform](demo.dev3.sh) and create a new project.
+The `"your-api-key"` and `"your-project-id"` fields can be found on your project details page after you go to the [demo platform](app.dev3.sh) and create a new project.
 
 ## Chainlink SDK
 
