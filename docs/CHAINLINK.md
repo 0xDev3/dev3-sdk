@@ -1,11 +1,11 @@
 # Dev3 Chainlink SDK
 
-Dev3 Chainlink SDK module is a fully open source Typescript SDK which enables any frontend developer to fetch the prices of various assets through Chainlink DataFeeds.
-Users can fetch price pairs, NFT floor price information & more...
+The Dev3 Chainlink SDK module is a fully open source Typescript SDK which enables any frontend developer to fetch the prices of various assets through Chainlink Data Feeds.
+Users can fetch price pairs, NFT floor price information & more.
 
 ## Getting started
 
-Install the Dev3 SDK by typing in your npm project (Angular, React, vanilla npm, ...)
+Install the Dev3 SDK in your npm project (Angular, React, vanilla npm, etc.). Type the following command on your terminal while on your project's root folder:
 
 ```sh
 npm install dev3-sdk
@@ -30,10 +30,11 @@ And simply fetch a price pair by calling the price feeds functionality on the SD
 ethSDK.getFromOracle(ethSDK.feeds.AAVE_ETH).then(res => { console.log(res) })
 ```
 
+You can find all available feeds by visiting [data.chain.link](https://data.chain.link/).
+
 ## Modern development
 
-Dev3 Chainlink SDK extracts all the pair contracts addresses for all networks that are compatible into code generated classes, so all 
-modern editors will support full code autocomplete.
+Dev3 Chainlink SDK extracts all the pair contracts addresses for all networks that are compatible into code generated classes, so all modern editors will support full code autocomplete.
 
 ![Screenshot 2023-03-31 at 17 48 26](https://user-images.githubusercontent.com/42938691/229169473-409e6fec-d183-416c-b0b3-db12f34fcf3c.png)
 
