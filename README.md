@@ -1,19 +1,19 @@
 # Dev3 SDK (TypeScript)
 
 SDK built for interacting with the Dev3 platform.
-The demo version of the platform is available [here](demo.dev3.sh).
+The demo version of the platform is available [here](https://app.dev3.sh/).
 
-The Dev3 platform provides a nice UI to interact with the blockchain, deploy new or import existing smart contracts and call various smart contrac functions on a click.
+The Dev3 platform provides a nice UI to interact with the blockchain, deploy new or import existing smart contracts, and call various smart contract functions with a single click.
 
-This SDK on the other hand provides the support for all of the above via various functions exposed through the sdk package, meaning, you can easily integrate the sdk to the existing web projects regardless of the technology stack being used, and 
+This SDK provides the support the Dev3 platform via various functions exposed through the sdk package; you can easily integrate the sdk to existing web projects regardless of the technology stack being used. 
 
-The simplest way to start using the SDK is to run
+The simplest way to start using the SDK is to run the following command in your project's root directory:
 
 ```shell
 $ npm install dev3-sdk
 ``` 
 
-inside your project root and then intialize the singleton object inside your application (be it nodejs, browser based, or other) like this:
+Then intialize the singleton object inside your application (be it nodejs, browser based, or other) like this:
 
 ```javascript
 import { Dev3SDK } from "dev3-sdk";
@@ -23,18 +23,18 @@ const { Dev3SDK } = require("dev3-sdk")
 const sdk = new Dev3SDK("your-api-key", "your-project-id"); 
 ```
 
-The `"your-api-key"` and `"your-project-id"` fields can be found on your project details page after you go to the [demo platform](demo.dev3.sh) and create a new project.
+`"your-api-key"` and `"your-project-id"` values can be found on your project details page in the [demo platform](https://app.dev3.sh/) and create a new project.
 
 ## Chainlink SDK
 
-While using the Dev3 SDK you will automatically get an access to the Chainlink Data Feeds by following the simple instructions in the
+Using Dev3 SDK automatically provides youaccess to Chainlink Data Feeds. Follow the instructions in the
 [Chainlink docs](./docs/CHAINLINK.md).
 
 ## Build
 
-Make sure you update your environment to NodeJS v16 before running the steps below.
+Update your environment to NodeJS v16 before running the steps below.
 
-To clone and build the project, this is the way:
+To clone and build the project, run the following command in your terminal:
 
 ```code
 $ git clone https://github.com/0xdev3/dev3-sdk
