@@ -30,6 +30,8 @@ const sdk = new Dev3SDK("your-api-key", "your-project-id");
 Using Dev3 SDK automatically provides youaccess to Chainlink Data Feeds. Follow the instructions in the
 [Chainlink docs](./docs/CHAINLINK.md).
 
+Take a look at [Example React App](https://github.com/0xDev3/chainlink-sdk-example-react-app) too see how to use Chainlink Dev3 SDK inside your project!
+
 ## Build
 
 Update your environment to NodeJS v16 before running the steps below.
