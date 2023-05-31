@@ -24,11 +24,35 @@ const ethSDK = Chainlink.instance('https://rpc-node-url.xx', Chainlink.PriceFeed
 const avaxSDK = Chainlink.instance('https://avax-rpc-url.xx', Chainlink.PriceFeeds.AVAX)
 ```
 
-And simply fetch a price pair by calling the price feeds functionality on the SDK:
+Once the SDK is initialized, you can start consuming different feeds as outlined in the examples below.
+
+### Price Feeds
 
 ```ts
-ethSDK.getFromOracle(ethSDK.feeds.AAVE_ETH).then(res => { console.log(res) })
+// AAVE/ETH price feed
+ethSDK.getFromOracle(ethSDK.feeds.AAVE_ETH).then((res) => {
+    console.log(res.answer.toString());
+});
 ```
+
+### NFT Floor Price Feeds
+
+```ts
+// Azuki floor price
+ethSDK.getFromOracle(ethSDK.feeds.AZUKI_FLOOR_ETH).then((res) => {
+    console.log(res.answer.toString());
+});
+```
+
+### Proof of Reserve Feeds
+```ts
+// EURS reserves
+ethSDK.getFromOracle(ethSDK.feeds.EURS_RESERVES).then((res) => {
+    console.log(res.answer.toString());
+});
+```
+
+### Full list of feeds
 
 You can find all available feeds by visiting [data.chain.link](https://data.chain.link/).
 
