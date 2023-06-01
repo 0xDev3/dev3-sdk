@@ -81,10 +81,7 @@ export interface RoundDataModel {
 
 ## Chainlink Contracts Manifest files
 
-Important Chainlink interfaces and contracts have been described by the Dev3 Manifest file standard and can be found here:
-
-Interfaces: https://github.com/0xDev3/solidity-commons/tree/master/interfaces/chainlink
-Deployable contracts: https://github.com/0xDev3/solidity-commons/tree/master/src/chainlink
+Important Chainlink interfaces and contracts have been described by the Dev3 Manifest file standard and can be found here: [Interfaces](https://github.com/0xDev3/solidity-commons/tree/master/interfaces/chainlink) & [Deployable contracts](https://github.com/0xDev3/solidity-commons/tree/master/src/chainlink).
 
 You can use them freely from within your frontends and/or wallets. To deploy them easily head over to the [Dev3 dashboard](https://app.dev3.sh/) and simply choose "Deploy from template" option in your workspace.
 
