@@ -1,14 +1,17 @@
-import { Dev3SDK } from '../src';
+import { Dev3SDK, Dev3API } from '../src';
 import { RequestStatus } from '../src/core/types';
 
 describe('Dev3 SDK', function () {
 
   it.only('sdk functions', async () => {
     // initialize SDK
+  
     const sdk = new Dev3SDK(
       'qIjms.7WuipAhYmyhPb0nT3rzJlYX8YJ+gvrvpgNu7I+E', // API KEY
       '5bbe9c27-92b8-4fe5-9f44-62f7343c2cbe' // PROJECT ID
     );
+
+    Dev3API.instance().fetchFunctionCallRequestById('')
 
     // BURN REQUEST FLOW
     // const myTokenContract = await sdk.getContractByAlias('my-token');
