@@ -14,7 +14,8 @@
         "lint-and-fix": "eslint . --ext .ts --fix",
         "prettier-format": "prettier 'src/**/*.ts' --write",
         "build": "rm -rf ./dist && tsup && tsc",
-        "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --require ts-node/register ./test/sdk.test.ts"
+        "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --require ts-node/register ./test/sdk.test.ts",
+        "test-app": "parcel test/web-app/index.html"
     },
     "keywords": [
         "dev3",
@@ -37,6 +38,7 @@
         "eslint-plugin-prettier": "^4.2.1",
         "mocha": "^10.0.0",
         "node-stdlib-browser": "^1.2.0",
+        "parcel-bundler": "^1.12.5",
         "prettier": "^2.8.0",
         "ts-node": "^10.9.1",
         "tsup": "^6.2.3",

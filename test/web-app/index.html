@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dev3 Example</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="holder">
+        <div>Mint NFTs to your wallet</div>
+        <div style="margin-top: 15px;">Amount to mint</div>
+        <input
+          id="mintInput"
+          type="number"
+          value="1"
+          placeholder="Amount to mint"
+        />
+        <button id="mintButton">Mint</button>
+      </div>
+      <div style="margin-top: 20px;">Transaction Hash:</div>
+      <div style="text-align: center; margin-top: 10px;" id="txhash-holder">
+        Not available. <br />
+        Click mint to get transaction hash
+      </div>
+    </div>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
