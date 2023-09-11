@@ -1,4 +1,6 @@
 import { SDKError } from '../../common/error';
+import { MainApi } from '../api/main-api';
+import { EncodedFunctionParameter } from '../types';
 
 const defaultPollIntervalSeconds = 3;
 
@@ -31,4 +33,35 @@ export function ensureBrowser(): void {
       'This feature is only available in browser environment!'
     );
   }
+}
+
+export async function readContract(
+  contract_address: string,
+  function_name: string,
+  function_params: any[],
+  output_params: string[],
+  caller_address: string
+) {
+  return await MainApi.instance().readContract({
+    contract_address,
+    function_name,
+    function_params,
+    output_params,
+    caller_address,
+  });
+}
+
+
+export async function writeContract(
+  contract_address: string,
+  function_name: string,
+  function_params: EncodedFunctionParameter[],
+  eth_amount: string,
+) {
+  return await MainApi.instance().createFunctionCallRequest({
+    contract_address,
+    function_name,
+    function_params,
+    eth_amount,
+  });
 }
