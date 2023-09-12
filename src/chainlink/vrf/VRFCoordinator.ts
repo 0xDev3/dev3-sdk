@@ -42,11 +42,7 @@ export class VRFCoordinator {
     }
 
     public async getSubscription(subId: string): Promise<VRFSubscription> {
-        const subscription = new VRFSubscription();
-        subscription.id = subId;
-        subscription.coordinatorAddress = this.address;
-        subscription.chainlinkTokenContractAddress = this.chainlinkTokenContractAddress;
-        return subscription.getInfo(subId);
+        return VRFSubscription.fromSubId(subId);
     }
 
     public async getConfig(): Promise<VRFCoordinatorConfig> {

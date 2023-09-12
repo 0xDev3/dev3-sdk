@@ -370,3 +370,11 @@ export interface VRFCoordinatorConfig {
   stalenessSeconds: number;
   gasAfterPaymentCalculation: number;
 }
+
+export interface VRFSubscriptionInfo {
+  id: string;
+  balance: string;
+  requestCount: string;
+  owner: string;
+  consumers: string[];
+}

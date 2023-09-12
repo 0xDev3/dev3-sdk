@@ -1,5 +1,7 @@
 import { ContractCallAction } from "../../core/actions/ContractCallAction";
-import { readContract, writeContract } from "../../core/helpers/util";
+import { MainApi } from "../../core/api/main-api";
+import { fetchTokenAndCoordinatorAddresses, readContract, writeContract } from "../../core/helpers/util";
+import { VRFSubscriptionInfo } from "../../core/types";
 
 export class VRFSubscription {
     public id: string = "";
@@ -10,9 +12,25 @@ export class VRFSubscription {
     public coordinatorAddress: string = "";
     public chainlinkTokenContractAddress: string = "";
 
-    constructor() { }
+    private constructor(subId: string) {
+        this.id = subId;
+    }
 
-    public async getInfo(subId?: string) {
+    static async fromSubId(subId: string): Promise<VRFSubscription> {
+        const projectChainId = (await MainApi.instance().fetchProject()).chain_id.toString();
+        const tokenAndCoordinatorAddresses: any = await fetchTokenAndCoordinatorAddresses();
+        const subscription = new VRFSubscription(subId);
+        subscription.coordinatorAddress = tokenAndCoordinatorAddresses.get(projectChainId).vrf_coordinator_contract;
+        subscription.chainlinkTokenContractAddress = tokenAndCoordinatorAddresses.get(projectChainId).link_token_contract;
+        const subscriptionInfo = await subscription.getInfo();
+        subscription.balance = subscriptionInfo.balance;
+        subscription.requestCount = subscriptionInfo.requestCount;
+        subscription.owner = subscriptionInfo.owner;
+        subscription.consumers = subscriptionInfo.consumers;
+        return subscription;
+    }
+
+    public async getInfo(subId?: string): Promise<VRFSubscriptionInfo> {
         const callRequest = await readContract(
             this.coordinatorAddress,
             "getSubscription",
