@@ -1,52 +1,31 @@
 import { VRFSubscription } from "./VRFSubscription";
-import { ContractCallAction } from '../core/actions/ContractCallAction';
-import { readContract, writeContract } from '../core/helpers/util';
+import { readContract, writeContract, fetchChainlist, fetchTokenAndCoordinatorAddresses } from '../../core/helpers/util';
 import { ethers } from 'ethers';
-import { MainApi } from '../core/api/main-api';
-import { VRFCoordinatorConfig } from '../core/types';
-
+import { MainApi } from '../../core/api/main-api';
+import { VRFCoordinatorConfig } from '../../core/types';
 
 let chainlist: any;
 let tokenAndCoordinatorAddresses: any;
 
-
-async function fetchChainlist() {
-    const chainlistResponse = await fetch(
-        'https://raw.githubusercontent.com/0xpolyflow/polyflow-sdk/master/resources/chainlist.json'
-    );
-    const chainlistJson = await chainlistResponse.json();
-    chainlist = new Map(Object.entries(chainlistJson));
-}
-
-async function fetchTokenAndCoordinatorAddresses() {
-    const tokenAndCoordinatorAddressesResponse = await fetch(
-        'https://raw.githubusercontent.com/0xpolyflow/polyflow-sdk/master/resources/chainlink_contract_and_coordinator.json'
-    );
-    const tokenAndCoordinatorAddressesJson = await tokenAndCoordinatorAddressesResponse.json();
-    tokenAndCoordinatorAddresses = new Map(Object.entries(tokenAndCoordinatorAddressesJson));
-}
-
-
 export class VRFCoordinator {
 
-    public subscriptions: VRFSubscription[] = [];
     public address: string = "";
     public chainlinkTokenContractAddress: string = "";
     public web3provider: any;
-    public projectChainId: number = 0;
+    public projectChainId: string = "";
 
     constructor() { }
 
     public async init() {
-        this.projectChainId = (await MainApi.instance().fetchProject()).chain_id;
-        await fetchTokenAndCoordinatorAddresses();
+        this.projectChainId = (await MainApi.instance().fetchProject()).chain_id.toString();
+        tokenAndCoordinatorAddresses = await fetchTokenAndCoordinatorAddresses();
         this.address = tokenAndCoordinatorAddresses.get(this.projectChainId).vrf_coordinator_contract;
         this.chainlinkTokenContractAddress = tokenAndCoordinatorAddresses.get(this.projectChainId).link_token_contract;
     }
 
     public async createSubscription(): Promise<VRFSubscription> {
         if (!this.web3provider) {
-            await fetchChainlist();
+            chainlist = await fetchChainlist();
             this.web3provider = new ethers.providers.JsonRpcProvider(chainlist.get(this.projectChainId));
         };
         const subscription = await writeContract(
@@ -55,9 +34,7 @@ export class VRFCoordinator {
             [],
             "0"
         );
-        console.log(subscription);
-        const action = new ContractCallAction(subscription);
-        const result = await action.present();
+        const result = await subscription.present();
         const transactionHash = result.transactionHash as string;
         const transactionReceipt = await this.web3provider.getTransactionReceipt(transactionHash);
         const subId = parseInt(transactionReceipt.logs[0].topics[1]);
@@ -65,25 +42,11 @@ export class VRFCoordinator {
     }
 
     public async getSubscription(subId: string): Promise<VRFSubscription> {
-        let subscription = this.subscriptions.find(sub => sub.id === subId);
-        if (subscription) return subscription;
-        subscription = new VRFSubscription();
+        const subscription = new VRFSubscription();
         subscription.id = subId;
-        const callRequest = await readContract(
-            this.address,
-            "getSubscription",
-            [{ type: "uint64", value: subId }],
-            ["uint96", "uint64", "address", "address[]"],
-            "0x0"
-        );
-        subscription.balance = callRequest.return_values[0];
-        subscription.requestCount = callRequest.return_values[1];
-        subscription.owner = callRequest.return_values[2];
-        subscription.consumers = Array.from(callRequest.return_values[3]);
         subscription.coordinatorAddress = this.address;
         subscription.chainlinkTokenContractAddress = this.chainlinkTokenContractAddress;
-        this.subscriptions.push(subscription);
-        return subscription;
+        return subscription.getInfo(subId);
     }
 
     public async getConfig(): Promise<VRFCoordinatorConfig> {
