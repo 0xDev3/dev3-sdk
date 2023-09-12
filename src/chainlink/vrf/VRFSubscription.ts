@@ -1,5 +1,5 @@
-import { writeContract } from "../core/helpers/util";
-
+import { ContractCallAction } from "../../core/actions/ContractCallAction";
+import { readContract, writeContract } from "../../core/helpers/util";
 
 export class VRFSubscription {
     public id: string = "";
@@ -12,8 +12,23 @@ export class VRFSubscription {
 
     constructor() { }
 
-    public async fund(amount: string) {
-        await writeContract(
+    public async getInfo(subId?: string) {
+        const callRequest = await readContract(
+            this.coordinatorAddress,
+            "getSubscription",
+            [{ type: "uint64", value: subId ? subId : this.id }],
+            ["uint96", "uint64", "address", "address[]"],
+            "0x0"
+        );
+        this.balance = callRequest.return_values[0];
+        this.requestCount = callRequest.return_values[1];
+        this.owner = callRequest.return_values[2];
+        this.consumers = Array.from(callRequest.return_values[3]);
+        return this;
+    }
+
+    public async fund(amount: string): Promise<ContractCallAction> {
+        return await writeContract(
             this.chainlinkTokenContractAddress,
             "transferAndCall",
             [
@@ -25,8 +40,8 @@ export class VRFSubscription {
         );
     }
 
-    public async cancel(toAddress: string) {
-        await writeContract(
+    public async cancel(toAddress: string): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "cancelSubscription",
             [
@@ -37,8 +52,8 @@ export class VRFSubscription {
         );
     }
 
-    public async ownerCancel() {
-        await writeContract(
+    public async ownerCancel(): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "ownerCancelSubscription",
             [
@@ -48,8 +63,8 @@ export class VRFSubscription {
         );
     }
 
-    public async addConsumer(consumerAddress: string) {
-        await writeContract(
+    public async addConsumer(consumerAddress: string): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "addConsumer",
             [
@@ -60,8 +75,8 @@ export class VRFSubscription {
         );
     }
 
-    public async removeConsumer(consumerAddress: string) {
-        await writeContract(
+    public async removeConsumer(consumerAddress: string): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "removeConsumer",
             [
@@ -72,8 +87,8 @@ export class VRFSubscription {
         );
     }
 
-    public async acceptOwnership() {
-        await writeContract(
+    public async acceptOwnership(): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "acceptSubscriptionOwnership",
             [],
@@ -81,8 +96,8 @@ export class VRFSubscription {
         );
     }
 
-    public async acceptSubscriptionOwnerTransfer() {
-        await writeContract(
+    public async acceptSubscriptionOwnerTransfer(): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "acceptSubscriptionOwnerTransfer",
             [
@@ -92,8 +107,8 @@ export class VRFSubscription {
         );
     }
 
-    public async requestSubscriptionOwnerTransfer(newOwner: string) {
-        await writeContract(
+    public async requestSubscriptionOwnerTransfer(newOwner: string): Promise<ContractCallAction> {
+        return await writeContract(
             this.coordinatorAddress,
             "requestSubscriptionOwnerTransfer",
             [
