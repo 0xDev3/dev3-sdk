@@ -54,7 +54,7 @@ export class VRFSubscription {
             [
                 { type: "address", value: this.coordinatorAddress },
                 { type: "uint256", value: ethers.utils.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.utils.arrayify(hexValue)) },
+                { type: "bytes", value: Array.from(ethers.utils.arrayify(hexValue)).map(it => it.toString()) },
             ],
             "0"
         );
