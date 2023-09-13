@@ -1,4 +1,7 @@
 import { SDKError } from '../../common/error';
+import { ContractCallAction } from '../actions/ContractCallAction';
+import { MainApi } from '../api/main-api';
+import { EncodedFunctionParameter } from '../types';
 
 const defaultPollIntervalSeconds = 3;
 
@@ -31,4 +34,52 @@ export function ensureBrowser(): void {
       'This feature is only available in browser environment!'
     );
   }
+}
+
+export async function readContract(
+  contract_address: string,
+  function_name: string,
+  function_params: any[],
+  output_params: string[],
+  caller_address: string
+) {
+  return await MainApi.instance().readContract({
+    contract_address,
+    function_name,
+    function_params,
+    output_params,
+    caller_address,
+  });
+}
+
+export async function writeContract(
+  contract_address: string,
+  function_name: string,
+  function_params: EncodedFunctionParameter[],
+  eth_amount: string,
+): Promise<ContractCallAction> {
+  return new ContractCallAction(
+    await MainApi.instance().createFunctionCallRequest({
+      contract_address,
+      function_name,
+      function_params,
+      eth_amount,
+    })
+  );
+}
+
+export async function fetchChainlist() {
+  const chainlistResponse = await fetch(
+    'https://raw.githubusercontent.com/0xpolyflow/polyflow-sdk/master/resources/chainlist.json'
+  );
+  const chainlistJson = await chainlistResponse.json();
+  return new Map(Object.entries(chainlistJson));
+}
+
+export async function fetchTokenAndCoordinatorAddresses() {
+  const tokenAndCoordinatorAddressesResponse = await fetch(
+    'https://raw.githubusercontent.com/0xPolycode/polyflow-sdk/master/resources/chainlink_contracts.json'
+  );
+  const tokenAndCoordinatorAddressesJson = await tokenAndCoordinatorAddressesResponse.json();
+  return new Map(Object.entries(tokenAndCoordinatorAddressesJson));
 }

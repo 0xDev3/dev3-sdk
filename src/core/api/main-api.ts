@@ -27,6 +27,7 @@ import {
   GetPayload,
   GetPayloadRequest,
   JwtToken,
+  ProjectInfoRequest,
   ReadFromContractByAddressRequest,
   ReadFromContractByAliasRequest,
   ReadFromContractByIdRequest,
@@ -80,6 +81,13 @@ export class MainApi extends HttpClient {
         'wallet-authorization',
         request
       );
+    return result;
+  }
+
+  public async fetchProject(): Promise<ProjectInfoRequest> {
+    const result = await this.protectedInstance.get(
+      `projects/by-api-key`
+    );
     return result;
   }
 

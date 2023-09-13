@@ -74,9 +74,9 @@ export type EncodedFunctionParameterValue =
 export type EncodedFunctionOutput =
   | string
   | {
-      type: string;
-      elems: EncodedFunctionOutput[];
-    };
+    type: string;
+    elems: EncodedFunctionOutput[];
+  };
 
 export interface ScreenConfig {
   before_action_message?: string;
@@ -352,4 +352,29 @@ export interface AssetSendRequest {
 
 export interface AssetSendRequests {
   requests: AssetSendRequest[];
+}
+
+export interface ProjectInfoRequest {
+  id: string;
+  owner_id: string;
+  issuer_contract_address: string;
+  base_redirect_url: string;
+  chain_id: number;
+  custom_rpc_url?: string;
+  created_at: Date;
+}
+
+export interface VRFCoordinatorConfig {
+  minimumRequestConfirmations: number;
+  maxGasLimit: number;
+  stalenessSeconds: number;
+  gasAfterPaymentCalculation: number;
+}
+
+export interface VRFSubscriptionInfo {
+  id: string;
+  balance: string;
+  requestCount: string;
+  owner: string;
+  consumers: string[];
 }

@@ -6,6 +6,8 @@ import { Dev3ChainlinkSDK } from 'dev3-chainlink-sdk/lib/src/dev3-sdk';
 
 export { Dev3SDK } from './core/sdk';
 export { MainApi as Dev3API } from './core/api/main-api';
+export { VRFSubscription } from './chainlink/vrf/VRFSubscription';
+export { VRFCoordinator } from './chainlink/vrf/VRFCoordinator';
 
 export class Chainlink {
 
