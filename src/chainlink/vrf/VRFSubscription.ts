@@ -2,6 +2,7 @@ import { ContractCallAction } from "../../core/actions/ContractCallAction";
 import { MainApi } from "../../core/api/main-api";
 import { fetchTokenAndCoordinatorAddresses, readContract, writeContract } from "../../core/helpers/util";
 import { VRFSubscriptionInfo } from "../../core/types";
+import { ethers } from 'ethers';
 
 export class VRFSubscription {
     public id: string = "";
@@ -38,7 +39,7 @@ export class VRFSubscription {
             ["uint96", "uint64", "address", "address[]"],
             "0x0"
         );
-        this.balance = callRequest.return_values[0];
+        this.balance = ethers.utils.formatEther(callRequest.return_values[0]);
         this.requestCount = callRequest.return_values[1];
         this.owner = callRequest.return_values[2];
         this.consumers = Array.from(callRequest.return_values[3]);
@@ -46,13 +47,14 @@ export class VRFSubscription {
     }
 
     public async fund(amount: string): Promise<ContractCallAction> {
+        const hexValue = ethers.utils.defaultAbiCoder.encode(["uint64"], [this.id])
         return await writeContract(
             this.chainlinkTokenContractAddress,
             "transferAndCall",
             [
                 { type: "address", value: this.coordinatorAddress },
-                { type: "uint256", value: amount },
-                { type: "bytes", value: this.id },
+                { type: "uint256", value: ethers.utils.parseUnits(amount).toString() },
+                { type: "bytes", value: Array.from(ethers.utils.arrayify(hexValue)) },
             ],
             "0"
         );
@@ -101,15 +103,6 @@ export class VRFSubscription {
                 { type: "uint64", value: this.id },
                 { type: "address", value: consumerAddress }
             ],
-            "0"
-        );
-    }
-
-    public async acceptOwnership(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.coordinatorAddress,
-            "acceptSubscriptionOwnership",
-            [],
             "0"
         );
     }
