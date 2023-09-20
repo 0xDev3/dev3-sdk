@@ -76,7 +76,7 @@ export async function fetchChainlist() {
   return new Map(Object.entries(chainlistJson));
 }
 
-export async function fetchTokenAndCoordinatorAddresses() {
+export async function fetchChainlinkContractsAddresses() {
   const tokenAndCoordinatorAddressesResponse = await fetch(
     'https://raw.githubusercontent.com/0xPolycode/polyflow-sdk/master/resources/chainlink_contracts.json'
   );
