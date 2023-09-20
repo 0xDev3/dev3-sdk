@@ -1,11 +1,11 @@
 import { VRFSubscription } from "./VRFSubscription";
-import { readContract, writeContract, fetchChainlist, fetchTokenAndCoordinatorAddresses } from '../../core/helpers/util';
+import { readContract, writeContract, fetchChainlist, fetchChainlinkContractsAddresses } from '../../core/helpers/util';
 import { ethers } from 'ethers';
 import { MainApi } from '../../core/api/main-api';
 import { VRFCoordinatorConfig } from '../../core/types';
 
 let chainlist: any;
-let tokenAndCoordinatorAddresses: any;
+let chainlinkContractsAddresses: any;
 
 export class VRFCoordinator {
 
@@ -18,9 +18,9 @@ export class VRFCoordinator {
 
     public async init() {
         this.projectChainId = (await MainApi.instance().fetchProject()).chain_id.toString();
-        tokenAndCoordinatorAddresses = await fetchTokenAndCoordinatorAddresses();
-        this.address = tokenAndCoordinatorAddresses.get(this.projectChainId).vrf_coordinator_contract;
-        this.chainlinkTokenContractAddress = tokenAndCoordinatorAddresses.get(this.projectChainId).link_token_contract;
+        chainlinkContractsAddresses = await fetchChainlinkContractsAddresses();
+        this.address = chainlinkContractsAddresses.get(this.projectChainId).vrf_coordinator_contract;
+        this.chainlinkTokenContractAddress = chainlinkContractsAddresses.get(this.projectChainId).link_token_contract;
     }
 
     public async createSubscription(): Promise<VRFSubscription> {
