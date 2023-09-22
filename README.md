@@ -37,7 +37,9 @@ Take a look at [Example React App](https://github.com/0xDev3/chainlink-sdk-examp
 ### VRF Subscriptions Management
 
 [Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/vrf-subscriptions)
+
 [Example app (live)](https://chainlink-vrf-subscriptions-example-react-app.vercel.app/)
+
 [Example app (github)](https://github.com/0xDev3/chainlink-vrf-subscriptions-example-react-app)
 
 ## Build
