@@ -9,6 +9,8 @@ export { MainApi as Dev3API } from './core/api/main-api';
 export { VRFSubscription } from './chainlink/vrf/VRFSubscription';
 export { VRFCoordinator } from './chainlink/vrf/VRFCoordinator';
 
+const DKG = require("dkg.js");
+
 export class Chainlink {
 
     static PriceFeeds = {
@@ -22,3 +24,5 @@ export class Chainlink {
     }
 
 }
+
+export { DKG };
