@@ -1,7 +1,7 @@
-import { PriceFeedsETH } from 'dev3-chainlink-feeds/dist/data-feeds/eth-data-feed'
-import { PriceFeedsAVAX } from 'dev3-chainlink-feeds/dist/data-feeds/avax-data-feed'
-import { PriceFeedsBSC } from 'dev3-chainlink-feeds/dist/data-feeds/bsc-data-feed'
-import { PriceFeedModel } from 'dev3-chainlink-feeds/dist/types/price-feeds-model';
+import { PriceFeedsETH } from 'dev3-chainlink-feeds'
+import { PriceFeedsAVAX } from 'dev3-chainlink-feeds'
+import { PriceFeedsBSC } from 'dev3-chainlink-feeds'
+import { PriceFeedModel } from 'dev3-chainlink-feeds';
 import { Dev3ChainlinkSDK } from 'dev3-chainlink-feeds';
 
 export { Dev3SDK } from './core/sdk';
