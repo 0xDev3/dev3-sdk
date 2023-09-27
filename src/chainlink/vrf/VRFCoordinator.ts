@@ -1,6 +1,6 @@
 import { VRFSubscription } from "./VRFSubscription";
 import { readContract, writeContract, fetchChainlist, fetchTokenAndCoordinatorAddresses } from '../../core/helpers/util';
-import { ethers } from 'ethers';
+import { JsonRpcProvider } from 'ethers';
 import { MainApi } from '../../core/api/main-api';
 import { VRFCoordinatorConfig } from '../../core/types';
 
@@ -27,7 +27,7 @@ export class VRFCoordinator {
         if (!this.web3provider) {
             chainlist = await fetchChainlist();
             
-            this.web3provider = new ethers.providers.JsonRpcProvider(chainlist.get(this.projectChainId));
+            this.web3provider = new JsonRpcProvider(chainlist.get(this.projectChainId));
         };
         const subscription = await writeContract(
             this.address,
