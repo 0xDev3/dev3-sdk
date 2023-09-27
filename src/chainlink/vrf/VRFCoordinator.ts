@@ -26,6 +26,7 @@ export class VRFCoordinator {
     public async createSubscription(): Promise<VRFSubscription> {
         if (!this.web3provider) {
             chainlist = await fetchChainlist();
+            
             this.web3provider = new ethers.providers.JsonRpcProvider(chainlist.get(this.projectChainId));
         };
         const subscription = await writeContract(
