@@ -4,10 +4,13 @@ import { PriceFeedsBSC } from 'dev3-chainlink-feeds'
 import { PriceFeedModel } from 'dev3-chainlink-feeds';
 import { Dev3ChainlinkSDK } from 'dev3-chainlink-feeds';
 
+import DkgClient from "dkg.js";
+
 export { Dev3SDK } from './core/sdk';
 export { MainApi as Dev3API } from './core/api/main-api';
 export { VRFSubscription } from './chainlink/vrf/VRFSubscription';
 export { VRFCoordinator } from './chainlink/vrf/VRFCoordinator';
+export { DkgClient }
 
 export class Chainlink {
 
@@ -22,11 +25,3 @@ export class Chainlink {
     }
 
 }
-
-export class OriginTrail {
-
-    static DKG = require("dkg.js");
-
-}
-
-
