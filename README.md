@@ -27,10 +27,22 @@ const sdk = new Dev3SDK("your-api-key", "your-project-id");
 
 ## Chainlink SDK
 
+### Price Feeds
+
 Using Dev3 SDK automatically provides youaccess to Chainlink Data Feeds. Follow the instructions in the
 [Chainlink docs](./docs/chainlink.md).
 
 Take a look at [Example React App](https://github.com/0xDev3/chainlink-sdk-example-react-app) too see how to use Chainlink Dev3 SDK inside your project!
+
+### VRF Subscriptions Management
+
+[Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/vrf-subscriptions)
+
+[Example app (live)](https://chainlink-vrf-subscriptions-example-react-app.vercel.app/)
+
+[Example app (github)](https://github.com/0xDev3/chainlink-vrf-subscriptions-example-react-app)
+
+The example app is running on the Sepolia testnet. You can use the [Chainlink Faucet](https://faucets.chain.link/) to get some test LINK tokens, and the [Ethereum Faucet](https://sepoliafaucet.com/) to get some test ETH.
 
 ## Build
 

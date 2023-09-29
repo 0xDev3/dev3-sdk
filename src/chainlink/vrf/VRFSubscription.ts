@@ -39,7 +39,7 @@ export class VRFSubscription {
             ["uint96", "uint64", "address", "address[]"],
             "0x0"
         );
-        this.balance = ethers.utils.formatEther(callRequest.return_values[0]);
+        this.balance = ethers.formatEther(callRequest.return_values[0]);
         this.requestCount = callRequest.return_values[1];
         this.owner = callRequest.return_values[2];
         this.consumers = Array.from(callRequest.return_values[3]);
@@ -47,14 +47,14 @@ export class VRFSubscription {
     }
 
     public async fund(amount: string): Promise<ContractCallAction> {
-        const hexValue = ethers.utils.defaultAbiCoder.encode(["uint64"], [this.id])
+        const hexValue = ethers.AbiCoder.defaultAbiCoder().encode(["uint64"], [this.id])
         return await writeContract(
             this.chainlinkTokenContractAddress,
             "transferAndCall",
             [
                 { type: "address", value: this.coordinatorAddress },
-                { type: "uint256", value: ethers.utils.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.utils.arrayify(hexValue)).map(it => it.toString()) },
+                { type: "uint256", value: ethers.parseUnits(amount).toString() },
+                { type: "bytes", value: Array.from(ethers.toBeArray(hexValue)).map(it => it.toString()) },
             ],
             "0"
         );

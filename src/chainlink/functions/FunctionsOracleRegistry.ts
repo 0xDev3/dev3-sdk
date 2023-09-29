@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { JsonRpcProvider } from "ethers";
 import { fetchChainlinkContractsAddresses, fetchChainlist, readContract, writeContract } from "../../core/helpers/util";
 import { FunctionsOracleRegistryConfig, FunctionsOracleRegistryRequestConfig } from "../../core/types";
 import { FunctionSubscription } from "./FunctionSubscription";
@@ -26,7 +26,7 @@ export class FunctionsOracleRegistry {
     public async createSubscription(): Promise<FunctionSubscription> {
         if (!this.web3provider) {
             chainlist = await fetchChainlist();
-            this.web3provider = new ethers.providers.JsonRpcProvider(chainlist.get(this.projectChainId));
+            this.web3provider = new JsonRpcProvider(chainlist.get(this.projectChainId));
         };
         const subscription = await writeContract(
             this.address,
@@ -43,22 +43,6 @@ export class FunctionsOracleRegistry {
 
     public async getSubscription(subId: string): Promise<FunctionSubscription> {
         return FunctionSubscription.fromSubId(subId);
-    }
-
-    public async estimateCost(gasLimit: number, gasPrice: number, donFee: number, registryFee: number): Promise<number> {
-        const callRequest = await readContract(
-            this.address,
-            "estimateCost",
-            [
-                { type: "uint32", value: gasLimit },
-                { type: "uint256", value: gasPrice },
-                { type: "uint96", value: donFee },
-                { type: "uint96", value: registryFee }
-            ],
-            ["uint96"],
-            "0x0"
-        );
-        return Number(callRequest.return_values[0]);
     }
 
     public async getAuthorizedSenders(): Promise<string[]> {
@@ -112,5 +96,4 @@ export class FunctionsOracleRegistry {
             authorizedSenders: Array.from(callRequest.return_values[1])
         }
     }
-
 }
