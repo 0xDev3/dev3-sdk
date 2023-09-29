@@ -378,3 +378,25 @@ export interface VRFSubscriptionInfo {
   owner: string;
   consumers: string[];
 }
+
+export interface FunctionsOracleRegistryConfig {
+  maxGasLimit: number;
+  stalenessSeconds: number;
+  gasAfterPaymentCalculation: number;
+  fallbackWeiPerUnitLink: number;
+  gasOverhead: number;
+  linkAddress: string;
+  linkPriceFeed: string;
+}
+
+export interface FunctionsOracleRegistryRequestConfig {
+  maxGasLimit: number;
+  authorizedSenders: string[];
+}
+
+export interface FunctionSubscriptionInfo {
+  id: string;
+  balance: string;
+  owner: string;
+  authorizedConsumers: string[];
+}
