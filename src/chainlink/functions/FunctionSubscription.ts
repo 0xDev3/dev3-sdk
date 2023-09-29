@@ -4,7 +4,6 @@ import { MainApi } from "../../core/api/main-api";
 import { fetchChainlinkContractsAddresses, readContract, writeContract } from "../../core/helpers/util";
 import { FunctionSubscriptionInfo } from "../../core/types";
 
-
 export class FunctionSubscription {
     public id: string = "";
     public owner: string = "";
@@ -21,7 +20,7 @@ export class FunctionSubscription {
         const projectChainId = (await MainApi.instance().fetchProject()).chain_id.toString();
         const chainlinkContractsAddresses: any = await fetchChainlinkContractsAddresses();
         const subscription = new FunctionSubscription(subId);
-        subscription.functionsRegistryAddress = chainlinkContractsAddresses.get(projectChainId).functions_registry_contract;
+        subscription.functionsRegistryAddress = chainlinkContractsAddresses.get(projectChainId).functions_oracle_registry;
         subscription.chainlinkTokenContractAddress = chainlinkContractsAddresses.get(projectChainId).link_token_contract;
         const subscriptionInfo = await subscription.getInfo();
         subscription.balance = subscriptionInfo.balance;
@@ -38,21 +37,21 @@ export class FunctionSubscription {
             ["uint96", "address", "address[]"],
             "0x0"
         );
-        this.balance = ethers.utils.formatEther(callRequest.return_values[0]);
+        this.balance = ethers.formatEther(callRequest.return_values[0]);
         this.owner = callRequest.return_values[1];
         this.authorizedConsumers = Array.from(callRequest.return_values[2]);
         return this;
     }
 
     public async fund(amount: string): Promise<ContractCallAction> {
-        const hexValue = ethers.utils.defaultAbiCoder.encode(["uint64"], [this.id])
+        const hexValue = ethers.AbiCoder.defaultAbiCoder().encode(["uint64"], [this.id])
         return await writeContract(
             this.chainlinkTokenContractAddress,
             "transferAndCall",
             [
                 { type: "address", value: this.functionsRegistryAddress },
-                { type: "uint256", value: ethers.utils.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.utils.arrayify(hexValue)).map(it => it.toString()) },
+                { type: "uint256", value: ethers.parseUnits(amount).toString() },
+                { type: "bytes", value: Array.from(ethers.toBeArray(hexValue)).map(it => it.toString()) },
             ],
             "0"
         );
@@ -116,16 +115,4 @@ export class FunctionSubscription {
             "0"
         );
     }
-
-    public async ownerCancel(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "ownerCancelSubscription",
-            [
-                { type: "uint64", value: this.id }
-            ],
-            "0"
-        );
-    }
-
 }

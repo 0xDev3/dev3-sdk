@@ -1,6 +1,6 @@
 {
     "name": "dev3-sdk",
-    "version": "0.0.18",
+    "version": "0.0.24",
     "description": "SDK for interacting with the 0xDev3 platform.",
     "main": "dist/node/index.js",
     "module": "dist/node/index.js",
@@ -47,6 +47,7 @@
     "dependencies": {
         "@ethersproject/bignumber": "^5.7.0",
         "axios": "^0.27.2",
-        "dev3-chainlink-sdk": "^1.0.2"
+        "dev3-chainlink-feeds": "^1.0.8",
+        "dkg.js": "^6.0.13"
     }
 }
