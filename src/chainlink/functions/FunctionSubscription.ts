@@ -1,48 +1,45 @@
+import { ethers } from "ethers";
 import { ContractCallAction } from "../../core/actions/ContractCallAction";
 import { MainApi } from "../../core/api/main-api";
 import { fetchChainlinkContractsAddresses, readContract, writeContract } from "../../core/helpers/util";
-import { VRFSubscriptionInfo } from "../../core/types";
-import { ethers } from 'ethers';
+import { FunctionSubscriptionInfo } from "../../core/types";
 
-export class VRFSubscription {
+export class FunctionSubscription {
     public id: string = "";
-    public balance: string = "";
-    public requestCount: string = "";
     public owner: string = "";
-    public consumers: string[] = [];
-    public coordinatorAddress: string = "";
+    public balance: string = "";
+    public authorizedConsumers: string[] = [];
+    public functionsRegistryAddress: string = "";
     public chainlinkTokenContractAddress: string = "";
 
     private constructor(subId: string) {
         this.id = subId;
     }
 
-    static async fromSubId(subId: string): Promise<VRFSubscription> {
+    static async fromSubId(subId: string): Promise<FunctionSubscription> {
         const projectChainId = (await MainApi.instance().fetchProject()).chain_id.toString();
         const chainlinkContractsAddresses: any = await fetchChainlinkContractsAddresses();
-        const subscription = new VRFSubscription(subId);
-        subscription.coordinatorAddress = chainlinkContractsAddresses.get(projectChainId).vrf_coordinator_contract;
+        const subscription = new FunctionSubscription(subId);
+        subscription.functionsRegistryAddress = chainlinkContractsAddresses.get(projectChainId).functions_oracle_registry;
         subscription.chainlinkTokenContractAddress = chainlinkContractsAddresses.get(projectChainId).link_token_contract;
         const subscriptionInfo = await subscription.getInfo();
         subscription.balance = subscriptionInfo.balance;
-        subscription.requestCount = subscriptionInfo.requestCount;
         subscription.owner = subscriptionInfo.owner;
-        subscription.consumers = subscriptionInfo.consumers;
+        subscription.authorizedConsumers = subscriptionInfo.authorizedConsumers;
         return subscription;
     }
 
-    public async getInfo(subId?: string): Promise<VRFSubscriptionInfo> {
+    public async getInfo(subId?: string): Promise<FunctionSubscriptionInfo> {
         const callRequest = await readContract(
-            this.coordinatorAddress,
+            this.functionsRegistryAddress,
             "getSubscription",
             [{ type: "uint64", value: subId ? subId : this.id }],
-            ["uint96", "uint64", "address", "address[]"],
+            ["uint96", "address", "address[]"],
             "0x0"
         );
         this.balance = ethers.formatEther(callRequest.return_values[0]);
-        this.requestCount = callRequest.return_values[1];
-        this.owner = callRequest.return_values[2];
-        this.consumers = Array.from(callRequest.return_values[3]);
+        this.owner = callRequest.return_values[1];
+        this.authorizedConsumers = Array.from(callRequest.return_values[2]);
         return this;
     }
 
@@ -52,7 +49,7 @@ export class VRFSubscription {
             this.chainlinkTokenContractAddress,
             "transferAndCall",
             [
-                { type: "address", value: this.coordinatorAddress },
+                { type: "address", value: this.functionsRegistryAddress },
                 { type: "uint256", value: ethers.parseUnits(amount).toString() },
                 { type: "bytes", value: Array.from(ethers.toBeArray(hexValue)).map(it => it.toString()) },
             ],
@@ -60,32 +57,9 @@ export class VRFSubscription {
         );
     }
 
-    public async cancel(toAddress: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.coordinatorAddress,
-            "cancelSubscription",
-            [
-                { type: "uint64", value: this.id },
-                { type: "address", value: toAddress }
-            ],
-            "0"
-        );
-    }
-
-    public async ownerCancel(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.coordinatorAddress,
-            "ownerCancelSubscription",
-            [
-                { type: "uint64", value: this.id }
-            ],
-            "0"
-        );
-    }
-
     public async addConsumer(consumerAddress: string): Promise<ContractCallAction> {
         return await writeContract(
-            this.coordinatorAddress,
+            this.functionsRegistryAddress,
             "addConsumer",
             [
                 { type: "uint64", value: this.id },
@@ -97,7 +71,7 @@ export class VRFSubscription {
 
     public async removeConsumer(consumerAddress: string): Promise<ContractCallAction> {
         return await writeContract(
-            this.coordinatorAddress,
+            this.functionsRegistryAddress,
             "removeConsumer",
             [
                 { type: "uint64", value: this.id },
@@ -107,9 +81,21 @@ export class VRFSubscription {
         );
     }
 
+    public async requestSubscriptionOwnerTransfer(newOwner: string): Promise<ContractCallAction> {
+        return await writeContract(
+            this.functionsRegistryAddress,
+            "requestSubscriptionOwnerTransfer",
+            [
+                { type: "uint64", value: this.id },
+                { type: "address", value: newOwner }
+            ],
+            "0"
+        );
+    }
+
     public async acceptSubscriptionOwnerTransfer(): Promise<ContractCallAction> {
         return await writeContract(
-            this.coordinatorAddress,
+            this.functionsRegistryAddress,
             "acceptSubscriptionOwnerTransfer",
             [
                 { type: "uint64", value: this.id }
@@ -118,13 +104,13 @@ export class VRFSubscription {
         );
     }
 
-    public async requestSubscriptionOwnerTransfer(newOwner: string): Promise<ContractCallAction> {
+    public async cancel(toAddress: string): Promise<ContractCallAction> {
         return await writeContract(
-            this.coordinatorAddress,
-            "requestSubscriptionOwnerTransfer",
+            this.functionsRegistryAddress,
+            "cancelSubscription",
             [
                 { type: "uint64", value: this.id },
-                { type: "address", value: newOwner }
+                { type: "address", value: toAddress }
             ],
             "0"
         );

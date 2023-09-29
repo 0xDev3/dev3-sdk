@@ -42,6 +42,8 @@ Take a look at [Example React App](https://github.com/0xDev3/chainlink-sdk-examp
 
 [Example app (github)](https://github.com/0xDev3/chainlink-vrf-subscriptions-example-react-app)
 
+The example app is running on the Sepolia testnet. You can use the [Chainlink Faucet](https://faucets.chain.link/) to get some test LINK tokens, and the [Ethereum Faucet](https://sepoliafaucet.com/) to get some test ETH.
+
 ## Build
 
 Update your environment to NodeJS v16 before running the steps below.
