@@ -10,6 +10,8 @@ export { Dev3SDK } from './core/sdk';
 export { MainApi as Dev3API } from './core/api/main-api';
 export { VRFSubscription } from './chainlink/vrf/VRFSubscription';
 export { VRFCoordinator } from './chainlink/vrf/VRFCoordinator';
+export { FunctionsOracleRegistry } from './chainlink/functions/FunctionsOracleRegistry';
+export { FunctionSubscription } from './chainlink/functions/FunctionSubscription';
 export { DkgClient }
 
 export class Chainlink {
