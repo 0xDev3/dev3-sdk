@@ -36,21 +36,23 @@ Take a look at [Example React App](https://github.com/0xDev3/chainlink-sdk-examp
 
 ### VRF Subscriptions Management
 
-[Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/vrf-subscriptions)
+📕 [Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/vrf-subscriptions)
 
-[Example app (live)](https://chainlink-vrf-subscriptions-example-react-app.vercel.app/)
+👨🏻‍💻 [Example app (live)](https://chainlink-vrf-subscriptions-example-react-app.vercel.app/)
 
-[Example app (github)](https://github.com/0xDev3/chainlink-vrf-subscriptions-example-react-app)
+📑 [Example app (github)](https://github.com/0xDev3/chainlink-vrf-subscriptions-example-react-app)
 
 The example app is running on the Sepolia testnet. You can use the [Chainlink Faucet](https://faucets.chain.link/) to get some test LINK tokens, and the [Ethereum Faucet](https://sepoliafaucet.com/) to get some test ETH.
 
 ### Functions Subscriptions Management
 
-[Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/functions-subscriptions)
+📕 [Docs](https://docs.dev3.sh/welcome-to-dev3/sdk/chainlink-subscriptions/functions-subscriptions)
 
-[Example app (live)](https://chainlink-functions-example-react-app-sigma.vercel.app/)
+👨🏻‍💻 [Example app (live)](https://chainlink-functions-example-react-app-sigma.vercel.app/)
 
-[Example app (github)](https://github.com/0xDev3/chainlink-functions-example-react-app)
+📑 [Example app (github)](https://github.com/0xDev3/chainlink-functions-example-react-app)
+
+The example app is running on the Sepolia testnet. You can use the [Chainlink Faucet](https://faucets.chain.link/) to get some test LINK tokens, and the [Ethereum Faucet](https://sepoliafaucet.com/) to get some test ETH.
 
 ## Build
 
