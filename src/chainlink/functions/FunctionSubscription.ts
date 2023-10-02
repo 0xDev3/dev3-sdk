@@ -51,7 +51,7 @@ export class FunctionSubscription {
             [
                 { type: "address", value: this.functionsRegistryAddress },
                 { type: "uint256", value: ethers.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.toBeArray(hexValue)).map(it => it.toString()) },
+                { type: "bytes", value: Array.from(ethers.getBytes(hexValue)).map(it => it.toString()) },
             ],
             "0"
         );
