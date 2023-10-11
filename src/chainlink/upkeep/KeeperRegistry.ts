@@ -66,7 +66,6 @@ export class KeeperRegistry {
             }],
             "0"
         );
-        console.log("upkeep", upkeep);
         const result = await upkeep.present();
         const transactionHash = result.transactionHash as string;
         const transactionReceipt = await this.web3provider.getTransactionReceipt(transactionHash);
