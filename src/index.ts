@@ -12,6 +12,8 @@ export { VRFSubscription } from './chainlink/vrf/VRFSubscription';
 export { VRFCoordinator } from './chainlink/vrf/VRFCoordinator';
 export { FunctionsOracleRegistry } from './chainlink/functions/FunctionsOracleRegistry';
 export { FunctionSubscription } from './chainlink/functions/FunctionSubscription';
+export { KeeperRegistry } from './chainlink/upkeep/KeeperRegistry';
+export { Upkeep } from './chainlink/upkeep/Upkeep';
 export { DkgClient }
 
 export class Chainlink {
