@@ -400,3 +400,24 @@ export interface FunctionSubscriptionInfo {
   owner: string;
   authorizedConsumers: string[];
 }
+
+export interface KeeperRegistrarConfig {
+  autoApproveConfigType: number;
+  autoApproveMaxAllowed: number;
+  approvedCount: number;
+  keeperRegistry: string;
+  minLINKJuels: number;
+}
+
+export interface UpkeepInfo {
+  balance: string;
+  targetContract: string;
+  admin: string;
+  checkData: string;
+  offchainConfig: string;
+  executeGas: string;
+  maxValidBlockNumber: string;
+  lastPerformBlockNumber: string;
+  amountSpent: string;
+  paused: boolean;
+}
