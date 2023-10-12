@@ -1,7 +1,7 @@
 import { SDKError } from '../../common/error';
 import { ContractCallAction } from '../actions/ContractCallAction';
 import { MainApi } from '../api/main-api';
-import { EncodedFunctionParameter } from '../types';
+import { EncodedFunctionOutput, EncodedFunctionParameter } from '../types';
 
 const defaultPollIntervalSeconds = 3;
 
@@ -39,8 +39,8 @@ export function ensureBrowser(): void {
 export async function readContract(
   contract_address: string,
   function_name: string,
-  function_params: any[],
-  output_params: string[],
+  function_params: EncodedFunctionParameter[],
+  output_params: EncodedFunctionOutput[],
   caller_address: string
 ) {
   return await MainApi.instance().readContract({
