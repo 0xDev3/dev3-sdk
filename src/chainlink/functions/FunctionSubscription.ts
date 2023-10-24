@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { TransactionResponse, ethers } from "ethers";
 import { ContractCallAction } from "../../core/actions/ContractCallAction";
 import { MainApi } from "../../core/api/main-api";
-import { fetchChainlinkContractsAddresses, readContract, writeContract } from "../../core/helpers/util";
-import { FunctionSubscriptionInfo } from "../../core/types";
+import { fetchChainlinkContractsAddresses, readContract, signAndSendTransaction, writeContract } from "../../core/helpers/util";
+import { EncodedFunctionParameter, FunctionSubscriptionInfo } from "../../core/types";
 
 export class FunctionSubscription {
     public id: string = "";
@@ -43,76 +43,160 @@ export class FunctionSubscription {
         return this;
     }
 
-    public async fund(amount: string): Promise<ContractCallAction> {
+    public async fund(amount: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
         const hexValue = ethers.AbiCoder.defaultAbiCoder().encode(["uint64"], [this.id])
-        return await writeContract(
-            this.chainlinkTokenContractAddress,
-            "transferAndCall",
-            [
-                { type: "address", value: this.functionsRegistryAddress },
-                { type: "uint256", value: ethers.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.getBytes(hexValue)).map(it => it.toString()) },
-            ],
-            "0"
-        );
+        const bytes = ethers.getBytes(hexValue)
+        const functionParameters = [
+            { type: "address", value: this.functionsRegistryAddress },
+            { type: "uint256", value: ethers.parseUnits(amount).toString() },
+            {
+                type: "bytes",
+                value: options?.pk ? bytes : Array.from(bytes).map(it => it.toString())
+            }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["to", "value", "data"]
+            const transactionResponse = signAndSendTransaction(
+                this.chainlinkTokenContractAddress,
+                "transferAndCall",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.chainlinkTokenContractAddress,
+                "transferAndCall",
+                functionParameters as [EncodedFunctionParameter],
+                "0"
+            );
+        }
     }
 
-    public async addConsumer(consumerAddress: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "addConsumer",
-            [
-                { type: "uint64", value: this.id },
-                { type: "address", value: consumerAddress }
-            ],
-            "0"
-        );
+    public async addConsumer(consumerAddress: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint64", value: this.id },
+            { type: "address", value: consumerAddress }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["subscriptionId", "consumer"]
+            const transactionResponse = signAndSendTransaction(
+                this.functionsRegistryAddress,
+                "addConsumer",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.functionsRegistryAddress,
+                "addConsumer",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async removeConsumer(consumerAddress: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "removeConsumer",
-            [
-                { type: "uint64", value: this.id },
-                { type: "address", value: consumerAddress }
-            ],
-            "0"
-        );
+    public async removeConsumer(consumerAddress: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint64", value: this.id },
+            { type: "address", value: consumerAddress }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["subscriptionId", "consumer"]
+            const transactionResponse = signAndSendTransaction(
+                this.functionsRegistryAddress,
+                "removeConsumer",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        }
+        else {
+            return await writeContract(
+                this.functionsRegistryAddress,
+                "removeConsumer",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async requestSubscriptionOwnerTransfer(newOwner: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "requestSubscriptionOwnerTransfer",
-            [
-                { type: "uint64", value: this.id },
-                { type: "address", value: newOwner }
-            ],
-            "0"
-        );
+    public async requestSubscriptionOwnerTransfer(newOwner: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint64", value: this.id },
+            { type: "address", value: newOwner }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["subscriptionId", "newOwner"]
+            const transactionResponse = signAndSendTransaction(
+                this.functionsRegistryAddress,
+                "requestSubscriptionOwnerTransfer",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        }
+        else {
+            return await writeContract(
+                this.functionsRegistryAddress,
+                "requestSubscriptionOwnerTransfer",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async acceptSubscriptionOwnerTransfer(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "acceptSubscriptionOwnerTransfer",
-            [
-                { type: "uint64", value: this.id }
-            ],
-            "0"
-        );
+    public async acceptSubscriptionOwnerTransfer(options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [{ type: "uint64", value: this.id }]
+        if (options?.pk) {
+            const parameterNames = ["subscriptionId"]
+            const transactionResponse = signAndSendTransaction(
+                this.functionsRegistryAddress,
+                "acceptSubscriptionOwnerTransfer",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        }
+        else {
+            return await writeContract(
+                this.functionsRegistryAddress,
+                "acceptSubscriptionOwnerTransfer",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async cancel(toAddress: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.functionsRegistryAddress,
-            "cancelSubscription",
-            [
-                { type: "uint64", value: this.id },
-                { type: "address", value: toAddress }
-            ],
-            "0"
-        );
+    public async cancel(toAddress: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint64", value: this.id },
+            { type: "address", value: toAddress }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["subscriptionId", "to"]
+            const transactionResponse = signAndSendTransaction(
+                this.functionsRegistryAddress,
+                "cancelSubscription",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        }
+        else {
+            return await writeContract(
+                this.functionsRegistryAddress,
+                "cancelSubscription",
+                functionParameters,
+                "0"
+            );
+        }
     }
 }

@@ -1,8 +1,8 @@
 import { ContractCallAction } from "../../core/actions/ContractCallAction";
 import { MainApi } from "../../core/api/main-api";
-import { fetchChainlinkContractsAddresses, readContract, writeContract } from "../../core/helpers/util";
-import { UpkeepInfo } from "../../core/types";
-import { ethers } from 'ethers';
+import { fetchChainlinkContractsAddresses, readContract, signAndSendTransaction, writeContract } from "../../core/helpers/util";
+import { EncodedFunctionParameter, UpkeepInfo } from "../../core/types";
+import { ethers, TransactionResponse } from 'ethers';
 
 export class Upkeep {
     public id: string = "";
@@ -77,110 +77,224 @@ export class Upkeep {
         return this;
     }
 
-    public async fund(amount: string): Promise<ContractCallAction> {
+    public async fund(amount: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
         const hexValue = ethers.AbiCoder.defaultAbiCoder().encode(["uint256"], [this.id])
-        return await writeContract(
-            this.chainlinkTokenContractAddress,
-            "transferAndCall",
-            [
-                { type: "address", value: this.keeperRegistryContractAddress },
-                { type: "uint256", value: ethers.parseUnits(amount).toString() },
-                { type: "bytes", value: Array.from(ethers.getBytes(hexValue)).map(it => it.toString()) },
-            ],
-            "0"
-        );
+        const bytes = ethers.getBytes(hexValue)
+        const functionParameters = [
+            { type: "address", value: this.keeperRegistryContractAddress },
+            { type: "uint256", value: ethers.parseUnits(amount).toString() },
+            {
+                type: "bytes",
+                value: options?.pk ? bytes : Array.from(bytes).map(it => it.toString())
+            }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["to", "value", "data"]
+            const transactionResponse = signAndSendTransaction(
+                this.chainlinkTokenContractAddress,
+                "transferAndCall",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.chainlinkTokenContractAddress,
+                "transferAndCall",
+                functionParameters as [EncodedFunctionParameter],
+                "0"
+            );
+        }
     }
 
-    public async pauseUpkeep(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "pauseUpkeep",
-            [
-                { type: "uint256", value: this.id },
-            ],
-            "0"
-        );
+    public async pauseUpkeep(options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [{ type: "uint256", value: this.id }]
+        if (options?.pk) {
+            const parameterNames = ["id"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "pauseUpkeep",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "pauseUpkeep",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async unpauseUpkeep(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "unpauseUpkeep",
-            [
-                { type: "uint256", value: this.id },
-            ],
-            "0"
-        );
+    public async unpauseUpkeep(options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [{ type: "uint256", value: this.id }]
+        if (options?.pk) {
+            const parameterNames = ["id"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "unpauseUpkeep",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "unpauseUpkeep",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async setGasLimit(limit: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "setUpkeepGasLimit",
-            [
-                { type: "uint256", value: this.id },
-                { type: "uint32", value: limit },
-            ],
-            "0"
-        );
+    public async setGasLimit(limit: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint256", value: this.id },
+            { type: "uint32", value: limit },
+        ]
+        if (options?.pk) {
+            const parameterNames = ["id", "gasLimit"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "setUpkeepGasLimit",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "setUpkeepGasLimit",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async setUpkeepOffchainConfig(offchainConfig: string): Promise<ContractCallAction> {
+    public async setUpkeepOffchainConfig(offchainConfig: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
         const hexValue = ethers.AbiCoder.defaultAbiCoder().encode(["string"], [offchainConfig])
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "setUpkeepOffchainConfig",
-            [
-                { type: "uint256", value: this.id },
-                { type: "bytes", value: Array.from(ethers.getBytes(hexValue)).map(it => it.toString()) },
-            ],
-            "0"
-        );
+        const bytes = ethers.getBytes(hexValue)
+        const functionParameters = [
+            { type: "uint256", value: this.id },
+            { type: "bytes", value: options?.pk ? bytes : Array.from(bytes).map(it => it.toString()) },
+        ]
+        if (options?.pk) {
+            const parameterNames = ["id", "config"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "setUpkeepOffchainConfig",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "setUpkeepOffchainConfig",
+                functionParameters as [EncodedFunctionParameter],
+                "0"
+            );
+        }
     }
 
-    public async cancel(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "cancelUpkeep",
-            [
-                { type: "uint256", value: this.id },
-            ],
-            "0"
-        );
+    public async cancel(options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [{ type: "uint256", value: this.id }]
+        if (options?.pk) {
+            const parameterNames = ["id"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "cancelUpkeep",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "cancelUpkeep",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async transferUpkeepAdmin(newOwner: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "transferUpkeepAdmin",
-            [
-                { type: "uint256", value: this.id },
-                { type: "address", value: newOwner }
-            ],
-            "0"
-        );
+    public async transferUpkeepAdmin(newOwner: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint256", value: this.id },
+            { type: "address", value: newOwner }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["id", "proposed"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "transferUpkeepAdmin",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "transferUpkeepAdmin",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async acceptUpkeepAdmin(): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "acceptUpkeepAdmin",
-            [
-                { type: "uint256", value: this.id }
-            ],
-            "0"
-        );
+    public async acceptUpkeepAdmin(options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [{ type: "uint256", value: this.id }]
+        if (options?.pk) {
+            const parameterNames = ["id"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "acceptUpkeepAdmin",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "acceptUpkeepAdmin",
+                functionParameters,
+                "0"
+            );
+        }
     }
 
-    public async withdrawFunds(address: string): Promise<ContractCallAction> {
-        return await writeContract(
-            this.keeperRegistryContractAddress,
-            "withdrawFunds",
-            [
-                { type: "uint256", value: this.id },
-                { type: "address", value: address }
-            ],
-            "0"
-        );
+    public async withdrawFunds(address: string, options?: { pk?: string }): Promise<ContractCallAction | TransactionResponse> {
+        const functionParameters = [
+            { type: "uint256", value: this.id },
+            { type: "address", value: address }
+        ]
+        if (options?.pk) {
+            const parameterNames = ["id", "to"]
+            const transactionResponse = signAndSendTransaction(
+                this.keeperRegistryContractAddress,
+                "withdrawFunds",
+                options.pk,
+                parameterNames,
+                functionParameters as [EncodedFunctionParameter]
+            );
+            return transactionResponse;
+        } else {
+            return await writeContract(
+                this.keeperRegistryContractAddress,
+                "withdrawFunds",
+                functionParameters,
+                "0"
+            );
+        }
     }
 }
