@@ -1,10 +1,9 @@
 import { VRFSubscription } from "./VRFSubscription";
-import { readContract, writeContract, fetchChainlist, fetchChainlinkContractsAddresses } from '../../core/helpers/util';
-import { JsonRpcProvider } from 'ethers';
+import { getWeb3Provider, readContract, writeContract, fetchChainlinkContractsAddresses, signAndSendTransaction, poll } from '../../core/helpers/util';
 import { MainApi } from '../../core/api/main-api';
 import { VRFCoordinatorConfig } from '../../core/types';
+import { TransactionReceipt } from 'ethers';
 
-let chainlist: any;
 let chainlinkContractsAddresses: any;
 
 export class VRFCoordinator {
@@ -21,23 +20,32 @@ export class VRFCoordinator {
         chainlinkContractsAddresses = await fetchChainlinkContractsAddresses();
         this.address = chainlinkContractsAddresses.get(this.projectChainId).vrf_coordinator_contract;
         this.chainlinkTokenContractAddress = chainlinkContractsAddresses.get(this.projectChainId).link_token_contract;
+        this.web3provider = await getWeb3Provider(this.projectChainId);
     }
 
-    public async createSubscription(): Promise<VRFSubscription> {
-        if (!this.web3provider) {
-            chainlist = await fetchChainlist();
-
-            this.web3provider = new JsonRpcProvider(chainlist.get(this.projectChainId));
-        };
-        const subscription = await writeContract(
-            this.address,
-            "createSubscription",
-            [],
-            "0"
+    public async createSubscription(options?: { pk?: string }): Promise<VRFSubscription> {
+        let transactionHash: string = "";
+        if (options?.pk) {
+            const transactionResponse = await signAndSendTransaction(
+                this.address,
+                "createSubscription",
+                options.pk
+            );
+            transactionHash = transactionResponse.hash;
+        } else {
+            const subscription = await writeContract(
+                this.address,
+                "createSubscription",
+                [],
+                "0"
+            );
+            const result = await subscription.present();
+            transactionHash = result.transactionHash as string;
+        }
+        const transactionReceipt = await poll<TransactionReceipt>(
+            () => this.web3provider.getTransactionReceipt(transactionHash),
+            (response) => response == null
         );
-        const result = await subscription.present();
-        const transactionHash = result.transactionHash as string;
-        const transactionReceipt = await this.web3provider.getTransactionReceipt(transactionHash);
         const subId = parseInt(transactionReceipt.logs[0].topics[1]);
         return await this.getSubscription(subId.toString());
     }
