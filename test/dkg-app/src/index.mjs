@@ -7,8 +7,8 @@ window.DkgClient = new DkgClient({
     port: 8900,
     blockchain: {
         name: 'otp::testnet'//,
-        // publicKey: "0x75bF490088b7B48C55e066D2f3c8CE030d43DcC1", // operational wallet address
-        // privateKey: "0x999585c323b459eef929137be14ce1d16cbda6fcd5d357874ebd01eef9d0db3a", // operational wallet priv key
+        // publicKey: "", // operational wallet address
+        // privateKey: "", // operational wallet priv key
     }
 });
 
