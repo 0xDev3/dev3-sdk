@@ -1,8 +1,8 @@
-import { PriceFeedsETH } from 'dev3-chainlink-feeds'
-import { PriceFeedsAVAX } from 'dev3-chainlink-feeds'
-import { PriceFeedsBSC } from 'dev3-chainlink-feeds'
-import { PriceFeedModel } from 'dev3-chainlink-feeds';
-import { Dev3ChainlinkSDK } from 'dev3-chainlink-feeds';
+// import { PriceFeedsETH } from 'dev3-chainlink-feeds'
+// import { PriceFeedsAVAX } from 'dev3-chainlink-feeds'
+// import { PriceFeedsBSC } from 'dev3-chainlink-feeds'
+// import { PriceFeedModel } from 'dev3-chainlink-feeds';
+// import { Dev3ChainlinkSDK } from 'dev3-chainlink-feeds';
 
 import DkgClient from "dkg.js";
 
@@ -16,16 +16,16 @@ export { KeeperRegistry } from './chainlink/upkeep/KeeperRegistry';
 export { Upkeep } from './chainlink/upkeep/Upkeep';
 export { DkgClient }
 
-export class Chainlink {
+// export class Chainlink {
 
-    static PriceFeeds = {
-        ETH: new PriceFeedsETH(),
-        AVAX: new PriceFeedsAVAX(),
-        BSC: new PriceFeedsBSC()
-    }
+//     static PriceFeeds = {
+//         ETH: new PriceFeedsETH(),
+//         AVAX: new PriceFeedsAVAX(),
+//         BSC: new PriceFeedsBSC()
+//     }
 
-    static instance<T extends PriceFeedModel>(rpc: string, priceFeed: T): Dev3ChainlinkSDK<T> {
-        return new Dev3ChainlinkSDK(rpc, priceFeed);
-    }
+//     static instance<T extends PriceFeedModel>(rpc: string, priceFeed: T): Dev3ChainlinkSDK<T> {
+//         return new Dev3ChainlinkSDK(rpc, priceFeed);
+//     }
 
-}
+// }
