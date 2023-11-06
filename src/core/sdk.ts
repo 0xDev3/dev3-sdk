@@ -119,6 +119,22 @@ export class Dev3SDK {
     });
   }
 
+  async writeContract(
+    contractAddress: string,
+    functionName: string,
+    functionParams: EncodedFunctionParameter[],
+    ethAmount: string,
+  ): Promise<ContractCallAction> {
+    return new ContractCallAction(
+      await MainApi.instance().createFunctionCallRequest({
+        contract_address: contractAddress,
+        function_name: functionName,
+        function_params: functionParams,
+        eth_amount: ethAmount,
+      })
+    );
+  }
+
   async requestTokens(
     toAddress: string,
     token: string,
