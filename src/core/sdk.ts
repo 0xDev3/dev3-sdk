@@ -6,7 +6,7 @@ import { WalletAuthorizationAction } from './actions/WalletAuthorizationAction';
 import { MainApi } from './api/main-api';
 import { Contract } from './contracts/Contract';
 import { ContractManifest } from './contracts/ContractManifest';
-import { AssetType, CreateWalletAuthorizationRequest } from './types';
+import { AssetType, CreateWalletAuthorizationRequest, EncodedFunctionOutput, EncodedFunctionParameter, ReadFromContractResult } from './types';
 import * as ExecEnv from '../execenv/modal';
 import * as ExecEnvProvider from '../execenv/provider';
 
@@ -102,6 +102,21 @@ export class Dev3SDK {
       id
     );
     return new ContractDeployAction(result);
+  }
+
+  async readContract(
+    contractAddress: string,
+    functionName: string,
+    functionParams: EncodedFunctionParameter[],
+    outputParams: EncodedFunctionOutput[]
+  ): Promise<ReadFromContractResult> {
+    return MainApi.instance().readContract({
+      caller_address: "0x0000000000000000000000000000000000000000",
+      contract_address: contractAddress,
+      function_name: functionName,
+      function_params: functionParams,
+      output_params: outputParams
+    });
   }
 
   async requestTokens(

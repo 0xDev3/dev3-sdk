@@ -47,7 +47,6 @@
     "dependencies": {
         "@ethersproject/bignumber": "^5.7.0",
         "axios": "^0.27.2",
-        "dev3-chainlink-feeds": "^1.0.8",
-        "dkg.js": "^6.0.13"
+        "dev3-chainlink-feeds": "^1.0.8"
     }
 }
