@@ -1,10 +1,9 @@
-import { JsonRpcProvider } from "ethers";
-import { fetchChainlinkContractsAddresses, fetchChainlist, readContract, writeContract } from "../../core/helpers/util";
+import { fetchChainlinkContractsAddresses, getWeb3Provider, poll, readContract, signAndSendTransaction, writeContract } from "../../core/helpers/util";
 import { FunctionsOracleRegistryConfig, FunctionsOracleRegistryRequestConfig } from "../../core/types";
 import { FunctionSubscription } from "./FunctionSubscription";
 import { MainApi } from "../../core/api/main-api";
+import { TransactionReceipt } from 'ethers';
 
-let chainlist: any;
 let chainlinkContractsAddresses: any;
 
 export class FunctionsOracleRegistry {
@@ -21,22 +20,32 @@ export class FunctionsOracleRegistry {
         chainlinkContractsAddresses = await fetchChainlinkContractsAddresses();
         this.address = chainlinkContractsAddresses.get(this.projectChainId).functions_oracle_registry;
         this.chainlinkTokenContractAddress = chainlinkContractsAddresses.get(this.projectChainId).link_token_contract;
+        this.web3provider = await getWeb3Provider(this.projectChainId);
     }
 
-    public async createSubscription(): Promise<FunctionSubscription> {
-        if (!this.web3provider) {
-            chainlist = await fetchChainlist();
-            this.web3provider = new JsonRpcProvider(chainlist.get(this.projectChainId));
-        };
-        const subscription = await writeContract(
-            this.address,
-            "createSubscription",
-            [],
-            "0"
+    public async createSubscription(options?: { pk?: string }): Promise<FunctionSubscription> {
+        let transactionHash: string = "";
+        if (options?.pk) {
+            const transactionResponse = await signAndSendTransaction(
+                this.address,
+                "createSubscription",
+                options.pk
+            );
+            transactionHash = transactionResponse.hash;
+        } else {
+            const subscription = await writeContract(
+                this.address,
+                "createSubscription",
+                [],
+                "0"
+            );
+            const result = await subscription.present();
+            transactionHash = result.transactionHash as string;
+        }
+        const transactionReceipt = await poll<TransactionReceipt>(
+            () => this.web3provider.getTransactionReceipt(transactionHash),
+            (response) => response == null
         );
-        const result = await subscription.present();
-        const transactionHash = result.transactionHash as string;
-        const transactionReceipt = await this.web3provider.getTransactionReceipt(transactionHash);
         const subId = parseInt(transactionReceipt.logs[0].topics[1]);
         return await this.getSubscription(subId.toString());
     }
