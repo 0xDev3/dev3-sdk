@@ -1,8 +1,8 @@
-import { PriceFeedsETH } from 'dev3-chainlink-feeds'
-import { PriceFeedsAVAX } from 'dev3-chainlink-feeds'
-import { PriceFeedsBSC } from 'dev3-chainlink-feeds'
-import { PriceFeedModel } from 'dev3-chainlink-feeds';
-import { Dev3ChainlinkSDK } from 'dev3-chainlink-feeds';
+import { PriceFeedsETH } from 'polycode-chainlink-feeds'
+import { PriceFeedsAVAX } from 'polycode-chainlink-feeds'
+import { PriceFeedsBSC } from 'polycode-chainlink-feeds'
+import { PriceFeedModel } from 'polycode-chainlink-feeds';
+import { PolycodeChainlinkSDK } from 'polycode-chainlink-feeds';
 
 // import DkgClient from "dkg.js";
 
@@ -24,8 +24,8 @@ export class Chainlink {
         BSC: new PriceFeedsBSC()
     }
 
-    static instance<T extends PriceFeedModel>(rpc: string, priceFeed: T): Dev3ChainlinkSDK<T> {
-        return new Dev3ChainlinkSDK(rpc, priceFeed);
+    static instance<T extends PriceFeedModel>(rpc: string, priceFeed: T): PolycodeChainlinkSDK<T> {
+        return new PolycodeChainlinkSDK(rpc, priceFeed);
     }
 
 }
