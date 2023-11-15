@@ -9,6 +9,7 @@ import { ContractManifest } from './contracts/ContractManifest';
 import { AssetType, CreateWalletAuthorizationRequest } from './types';
 import * as ExecEnv from '../execenv/modal';
 import * as ExecEnvProvider from '../execenv/provider';
+import { ContractArbitraryCallAction } from "./actions/ContractArbitraryCallAction";
 
 export class Dev3SDK {
 
@@ -42,6 +43,22 @@ export class Dev3SDK {
         message_to_sign: payloadResponse.payload,
       });
     return new WalletAuthorizationAction(generatedAction);
+  }
+
+  async contractArbitraryCall(
+    options: {
+      to: string,
+      from: string,
+      data: string
+    }
+  ): Promise<ContractArbitraryCallAction> {
+    const generatedAction = await MainApi.instance().createContractArbitraryCallRequest({
+      contract_address: options.to,
+      function_data: options.data,
+      eth_amount: "0",
+      caller_address: options.from
+    });
+    return new ContractArbitraryCallAction(generatedAction);
   }
 
   async getManifests(

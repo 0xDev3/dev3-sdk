@@ -5,11 +5,13 @@ import {
   AddressBookEntry,
   AssetSendRequest,
   AssetSendRequests,
-  AttachTxHashRequest,
+  AttachTxHashRequest, ContractArbitraryCallRequest, ContractArbitraryCallRequests,
   ContractDeploymentRequest,
   ContractDeploymentRequests,
   CreateAddressBookEntryRequest,
-  CreateAssetSendRequest,
+  CreateAssetSendRequest, CreateContractArbitraryCallRequestWithContractAddress,
+  CreateContractArbitraryCallRequestWithContractAlias,
+  CreateContractArbitraryCallRequestWithContractId,
   CreateContractDeploymentRequest,
   CreateFunctionCallRequestWithContractAddress,
   CreateFunctionCallRequestWithContractAlias,
@@ -376,5 +378,45 @@ export class MainApi extends HttpClient {
     return this.instance.get<AssetSendRequests>(
       `send/by-recipient/${recipientAddress}`
     );
+  }
+
+  public async createContractArbitraryCallRequest(
+    request:
+      | CreateContractArbitraryCallRequestWithContractId
+      | CreateContractArbitraryCallRequestWithContractAlias
+      | CreateContractArbitraryCallRequestWithContractAddress
+  ): Promise<ContractArbitraryCallRequest> {
+    const result = await this.protectedInstance.post<ContractArbitraryCallRequest>(
+      'arbitrary-call',
+      request
+    );
+    return result;
+  }
+
+  public async fetchContractArbitraryCallRequestById(
+    id: string
+  ): Promise<ContractArbitraryCallRequest> {
+    const result = await this.instance.get<ContractArbitraryCallRequest>(
+      `arbitrary-call/${id}`
+    );
+    return result;
+  }
+
+  public async fetchContractArbitraryCallRequests(
+    deployedContractId?: string,
+    contractAddress?: string
+  ): Promise<ContractArbitraryCallRequest[]> {
+    const params: Map<string, string> = new Map();
+    if (deployedContractId) {
+      params.set('deployedContractId', deployedContractId);
+    }
+    if (contractAddress) {
+      params.set('contractAddress', contractAddress);
+    }
+    const result = await this.instance.get<ContractArbitraryCallRequests>(
+      `arbitrary-call/by-project/${this.projectId}`,
+      { params }
+    );
+    return result.requests;
   }
 }

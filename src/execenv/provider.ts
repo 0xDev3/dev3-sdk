@@ -8,12 +8,14 @@ export function attach(sdk: Dev3SDK) {
     ensureBrowser();
     configureMessageListener();
     (window as any).dev3 = sdk;
+
+    if (!proxy) {
+        proxy = new Proxy((window as any).ethereum, handler);
+        console.log("Dev3 Middleware attached!");
+    }
+
     Object.defineProperty(window, "ethereum", {
         get() {
-            if (!proxy) {
-                proxy = new Proxy((window as any).ethereum, handler);
-                console.log("Dev3 Middleware attached!");
-            }
             return proxy;
         },
         set(newProvider) {
@@ -47,10 +49,9 @@ const handler = {
                     } else {
                         return getAccounts(method);
                     }
-                // @ts-ignore: Fallthrough is wanted in the eth_sendTransaction case
-                case 'eth_sendTransaciton':
-                    // todo
-                    console.log('Dev3 Middleware: send transaction handler triggered. doing nothing...', params);
+                case 'eth_sendTransaction':
+                    console.log('Dev3 Middleware: send transaction handler triggered.');
+                    return sendTransaction(params[0]);
                 default:
                     const result = await Reflect.get(target, prop, receiver)(...args);
                     console.log(`Dev3 Middleware: forwarded call ${method} to an actual provider. Result: `, result);
@@ -70,6 +71,25 @@ async function getAccounts(method: string) {
         connectedAccounts = [ authActionResult.wallet ];
         return connectedAccounts;
     } else { return []; }
+}
+
+type TxData = {
+    data: string
+    from: string
+    to: string
+    gas: string
+    gasPrice: string
+}
+
+async function sendTransaction(txData: TxData) {
+    console.log("Generating send tx action...", txData);
+    const arbitraryCallAction = await sdk().contractArbitraryCall(txData);
+    console.log(`Contract arbitrary call action generated! Url: ${arbitraryCallAction.actionUrl}`);
+    const actionResult = await arbitraryCallAction.present();
+    console.log(
+      `Dev3 Middleware: intercepted call eth_sendTransaction and executed on middleware. Result: `, actionResult
+    );
+    return actionResult.transactionHash;
 }
 
 function sdk(): Dev3SDK {
