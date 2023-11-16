@@ -29,9 +29,15 @@ const proxiedFunctions = ['request'];
 
 const handler = {
     get(target: any, prop: any, receiver: any) {
+        if (prop === 'enable') {
+            console.log('Skipping enable() call...');
+            return () => {}; // 'enable' is a property that has function value
+        }
+
         if (!proxiedFunctions.includes(prop)) {
             return Reflect.get(target, prop, receiver);
         }
+
         return async (...args: any) => {
             const arg0IsMethodString = typeof args[0] === "string";
             const method = arg0IsMethodString ? args[0] : args[0].method;
