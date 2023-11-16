@@ -49,13 +49,14 @@ export class Dev3SDK {
     options: {
       to: string,
       from: string,
-      data: string
+      data?: string,
+      value?: string
     }
   ): Promise<ContractArbitraryCallAction> {
     const generatedAction = await MainApi.instance().createContractArbitraryCallRequest({
       contract_address: options.to,
-      function_data: options.data,
-      eth_amount: "0",
+      function_data: options.data || "0x",
+      eth_amount: options.value || "0",
       caller_address: options.from
     });
     return new ContractArbitraryCallAction(generatedAction);

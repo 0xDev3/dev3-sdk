@@ -80,7 +80,8 @@ async function getAccounts(method: string) {
 }
 
 type TxData = {
-    data: string
+    data?: string
+    value?: string
     from: string
     to: string
     gas: string
@@ -89,9 +90,9 @@ type TxData = {
 
 async function sendTransaction(txData: TxData) {
     console.log("Generating send tx action...", txData);
-    const arbitraryCallAction = await sdk().contractArbitraryCall(txData);
-    console.log(`Contract arbitrary call action generated! Url: ${arbitraryCallAction.actionUrl}`);
-    const actionResult = await arbitraryCallAction.present();
+    const action = await sdk().contractArbitraryCall(txData);
+    console.log(`Contract arbitrary call action generated! Url: ${action.actionUrl}`);
+    const actionResult = await action.present();
     console.log(
       `Dev3 Middleware: intercepted call eth_sendTransaction and executed on middleware. Result: `, actionResult
     );
