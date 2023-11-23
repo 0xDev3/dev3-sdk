@@ -47,6 +47,6 @@
     "dependencies": {
         "@ethersproject/bignumber": "^5.7.0",
         "axios": "^0.27.2",
-        "dkg.js": "^6.0.13"
+        "dkg.js": "^6.0.16"
     }
 }
