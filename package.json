@@ -47,6 +47,7 @@
     "dependencies": {
         "@ethersproject/bignumber": "^5.7.0",
         "axios": "^0.27.2",
-        "polycode-chainlink-feeds": "^1.0.9"
+        "polycode-chainlink-feeds": "^1.0.9",
+        "dkg.js": "^6.0.13"
     }
 }

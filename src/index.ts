@@ -4,7 +4,7 @@ import { PriceFeedsBSC } from 'polycode-chainlink-feeds'
 import { PriceFeedModel } from 'polycode-chainlink-feeds';
 import { PolycodeChainlinkSDK } from 'polycode-chainlink-feeds';
 
-// import DkgClient from "dkg.js";
+import DkgClient from "dkg.js";
 
 export { Dev3SDK } from './core/sdk';
 export { MainApi as Dev3API } from './core/api/main-api';
@@ -14,7 +14,7 @@ export { FunctionsOracleRegistry } from './chainlink/functions/FunctionsOracleRe
 export { FunctionSubscription } from './chainlink/functions/FunctionSubscription';
 export { KeeperRegistry } from './chainlink/upkeep/KeeperRegistry';
 export { Upkeep } from './chainlink/upkeep/Upkeep';
-// export { DkgClient }
+export { DkgClient }
 
 export class Chainlink {
 
