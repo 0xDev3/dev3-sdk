@@ -59,6 +59,59 @@ export interface CreateFunctionCallRequestWithContractAddress {
   redirect_url?: string;
 }
 
+export interface CreateContractArbitraryCallRequestWithContractId {
+  deployed_contract_id: string;
+  function_data: string;
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
+}
+
+export interface CreateContractArbitraryCallRequestWithContractAlias {
+  deployed_contract_alias: string;
+  function_data: string;
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
+}
+
+export interface CreateContractArbitraryCallRequestWithContractAddress {
+  contract_address: string;
+  function_data: string;
+  eth_amount: string;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  redirect_url?: string;
+}
+
+export interface ContractArbitraryCallRequest {
+  id: string;
+  status: RequestStatus;
+  deployed_contract_id?: string;
+  contract_address: string;
+  function_name?: string;
+  function_params?: EncodedFunctionParameter[];
+  function_call_data: string;
+  eth_amount: string;
+  chain_id: number;
+  redirect_url: string;
+  project_id: string;
+  created_at: Date;
+  arbitrary_data?: Map<string, object>;
+  screen_config?: ScreenConfig;
+  caller_address?: string;
+  arbitrary_call_tx: TxData;
+}
+
+export interface ContractArbitraryCallRequests {
+  requests: ContractArbitraryCallRequest[];
+}
+
 export interface EncodedFunctionParameter {
   type: string;
   value: string | string[] | boolean | EncodedFunctionParameter[];

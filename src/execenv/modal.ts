@@ -7,10 +7,12 @@ import { WalletAuthorizationAction } from '../core/actions/WalletAuthorizationAc
 import { MainApi } from '../core/api/main-api';
 import { ensureBrowser, poll } from '../core/helpers/util';
 import { RequestStatus } from '../core/types';
+import { ContractArbitraryCallAction } from "../core/actions/ContractArbitraryCallAction";
 
 export type SupportedActionType =
   | ContractDeployAction
   | ContractCallAction
+  | ContractArbitraryCallAction
   | WalletAuthorizationAction
   | TokenSendRequestAction
   | NativeSendRequestAction;
@@ -39,6 +41,13 @@ export async function present(actionUrl: string): Promise<SupportedActionType> {
         actionUuid
       );
       return new ContractCallAction(response);
+    };
+  } else if (actionUrl.includes('/request-arbitrary-call')) {
+    actionDataFetcher = async () => {
+      const response = await MainApi.instance().fetchContractArbitraryCallRequestById(
+        actionUuid
+      );
+      return new ContractArbitraryCallAction(response);
     };
   } else if (actionUrl.includes('/request-authorization')) {
     actionDataFetcher = async () => {
