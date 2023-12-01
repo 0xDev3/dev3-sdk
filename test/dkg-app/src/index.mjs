@@ -6,7 +6,7 @@ import {Dev3SDK, DkgClient} from "dev3-sdk";
 Dev3SDK.attach("dev3-api-key", "dev3-project-id"); // your Dev3 project data
 
 window.DkgClient = new DkgClient({
-    endpoint: 'http://otp-testnet.dev3.sh',  // gateway node URI
+    endpoint: 'http://dkg-testnet.dev3.sh',  // gateway node URI
     port: 8900,
     blockchain: {
         name: 'otp::testnet',
