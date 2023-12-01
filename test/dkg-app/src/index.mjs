@@ -3,7 +3,10 @@ import "./styles.css";
 import {Dev3SDK, DkgClient} from "dev3-sdk";
 
 // Activate Dev3 Widget support
-Dev3SDK.attach("dev3-api-key", "dev3-project-id"); // your Dev3 project data
+Dev3SDK.attach(
+    "mKnzx.+taDV1VFJwUpe1q7jcTloJfh5zaaOEcFBLr3c+l", // test dev3 project id
+    "d9e0e81e-8579-4035-b8ab-be736fa73dea"           // test dev3 project api key
+); // get your credentials at https://app.dev3.sh 
 
 window.DkgClient = new DkgClient({
     endpoint: 'http://dkg-testnet.dev3.sh',  // gateway node URI
