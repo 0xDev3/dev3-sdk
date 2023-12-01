@@ -1,7 +1,7 @@
 import { DkgClient } from "dev3-sdk";
 
 const dkg = new DkgClient({
-    endpoint: '',  // gateway node URI
+    endpoint: 'https://otp-testnet.dev3.sh/',  // gateway node URI
     port: 8900,
     blockchain: {
         name: 'otp::testnet',

@@ -3,10 +3,10 @@ import "./styles.css";
 import {Dev3SDK, DkgClient} from "dev3-sdk";
 
 // Activate Dev3 Widget support
-Dev3SDK.attach("dev3-api-key", "dev3-project-id");
+Dev3SDK.attach("dev3-api-key", "dev3-project-id"); // your Dev3 project data
 
 window.DkgClient = new DkgClient({
-    endpoint: 'https://otp-testnet.dev3.sh/',  // gateway node URI
+    endpoint: 'http://otp-testnet.dev3.sh',  // gateway node URI
     port: 8900,
     blockchain: {
         name: 'otp::testnet',
