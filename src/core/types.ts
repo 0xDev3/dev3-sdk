@@ -89,6 +89,37 @@ export interface CreateContractArbitraryCallRequestWithContractAddress {
   redirect_url?: string;
 }
 
+export interface EstimateContractArbitraryCallRequestGasCostWithContractId {
+  deployed_contract_id: string;
+  function_data: string;
+  eth_amount: string;
+  caller_address?: string;
+}
+
+export interface EstimateContractArbitraryCallRequestGasCostWithContractAlias {
+  deployed_contract_alias: string;
+  function_data: string;
+  eth_amount: string;
+  caller_address?: string;
+}
+
+export interface EstimateContractArbitraryCallRequestGasCostWithContractAddress {
+  contract_address: string;
+  function_data: string;
+  eth_amount: string;
+  caller_address?: string;
+}
+
+export interface EstimateGasCostResponse {
+  chain_id: number;
+  gas_estimate: string;
+}
+
+export interface GasPriceResponse {
+  chain_id: number;
+  gas_price: string;
+}
+
 export interface ContractArbitraryCallRequest {
   id: string;
   status: RequestStatus;
@@ -127,9 +158,9 @@ export type EncodedFunctionParameterValue =
 export type EncodedFunctionOutput =
   | string
   | {
-    type: string;
-    elems: EncodedFunctionOutput[];
-  };
+  type: string;
+  elems: EncodedFunctionOutput[];
+};
 
 export interface ScreenConfig {
   before_action_message?: string;
@@ -144,6 +175,7 @@ export interface TxData {
   value: string;
   block_confirmations?: number;
   timestamp?: Date;
+  raw_rpc_transaction_receipt: string;
 }
 
 export enum RequestStatus {
@@ -240,12 +272,37 @@ export interface ReadFromContractByAliasRequest {
   caller_address: string;
 }
 
+export interface RawDataReadFromContractByAddressRequest {
+  contract_address: string;
+  block_number?: string;
+  function_call_data: string;
+  output_params: EncodedFunctionOutput[];
+  caller_address: string;
+}
+
+export interface RawDataReadFromContractByIdRequest {
+  deployed_contract_id: string;
+  block_number?: string;
+  function_call_data: string;
+  output_params: EncodedFunctionOutput[];
+  caller_address: string;
+}
+
+export interface RawDataReadFromContractByAliasRequest {
+  deployed_contract_alias: string;
+  block_number?: string;
+  function_call_data: string;
+  output_params: EncodedFunctionOutput[];
+  caller_address: string;
+}
+
 export interface ReadFromContractResult {
   deployed_contract_id?: string;
   contract_address: string;
   block_number: string;
   timestamp: Date;
   return_values: string[];
+  raw_return_value: string;
 }
 
 export interface AttachTxHashRequest {
