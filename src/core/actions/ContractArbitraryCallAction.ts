@@ -10,6 +10,10 @@ export class ContractArbitraryCallAction {
     this.callRequest = callRequest;
   }
 
+  get id(): string {
+    return this.callRequest.id;
+  }
+
   get actionUrl(): string {
     return this.callRequest.redirect_url;
   }

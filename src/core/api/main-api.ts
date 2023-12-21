@@ -5,11 +5,14 @@ import {
   AddressBookEntry,
   AssetSendRequest,
   AssetSendRequests,
-  AttachTxHashRequest, ContractArbitraryCallRequest, ContractArbitraryCallRequests,
+  AttachTxHashRequest,
+  ContractArbitraryCallRequest,
+  ContractArbitraryCallRequests,
   ContractDeploymentRequest,
   ContractDeploymentRequests,
   CreateAddressBookEntryRequest,
-  CreateAssetSendRequest, CreateContractArbitraryCallRequestWithContractAddress,
+  CreateAssetSendRequest,
+  CreateContractArbitraryCallRequestWithContractAddress,
   CreateContractArbitraryCallRequestWithContractAlias,
   CreateContractArbitraryCallRequestWithContractId,
   CreateContractDeploymentRequest,
@@ -21,15 +24,23 @@ import {
   DeployableContract,
   DeployableContractsRequest,
   DeployableContractsResult,
+  EstimateContractArbitraryCallRequestGasCostWithContractAddress,
+  EstimateContractArbitraryCallRequestGasCostWithContractAlias,
+  EstimateContractArbitraryCallRequestGasCostWithContractId,
+  EstimateGasCostResponse,
   FetchAddressBookEntryByAliasRequest,
   FunctionCallRequest,
   FunctionCallRequests,
+  GasPriceResponse,
   GetJwtByMessageRequest,
   GetJwtRequest,
   GetPayload,
   GetPayloadRequest,
   JwtToken,
   ProjectInfoRequest,
+  RawDataReadFromContractByAddressRequest,
+  RawDataReadFromContractByAliasRequest,
+  RawDataReadFromContractByIdRequest,
   ReadFromContractByAddressRequest,
   ReadFromContractByAliasRequest,
   ReadFromContractByIdRequest,
@@ -206,6 +217,9 @@ export class MainApi extends HttpClient {
       | ReadFromContractByAddressRequest
       | ReadFromContractByAliasRequest
       | ReadFromContractByIdRequest
+      | RawDataReadFromContractByAddressRequest
+      | RawDataReadFromContractByAliasRequest
+      | RawDataReadFromContractByIdRequest
   ): Promise<ReadFromContractResult> {
     const result = await this.protectedInstance.post<ReadFromContractResult>(
       'readonly-function-call',
@@ -389,6 +403,26 @@ export class MainApi extends HttpClient {
     const result = await this.protectedInstance.post<ContractArbitraryCallRequest>(
       'arbitrary-call',
       request
+    );
+    return result;
+  }
+
+  public async estimateArbitraryCallGasCost(
+    request:
+      | EstimateContractArbitraryCallRequestGasCostWithContractId
+      | EstimateContractArbitraryCallRequestGasCostWithContractAlias
+      | EstimateContractArbitraryCallRequestGasCostWithContractAddress
+  ): Promise<EstimateGasCostResponse> {
+    const result = await this.protectedInstance.post<EstimateGasCostResponse>(
+      'gas/estimate/arbitrary-call',
+      request
+    );
+    return result;
+  }
+
+  public async getGasPrice(): Promise<GasPriceResponse> {
+    const result = await this.protectedInstance.get<GasPriceResponse>(
+      'gas/price'
     );
     return result;
   }
