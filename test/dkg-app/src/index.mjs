@@ -9,7 +9,7 @@ Dev3SDK.attach(
 ); // get your credentials at https://app.dev3.sh 
 
 window.DkgClient = new DkgClient({
-    endpoint: 'http://dkg-testnet.dev3.sh',  // gateway node URI
+    endpoint: 'http://otp-testnet.dev3.sh',  // gateway node URI
     port: 8900,
     blockchain: {
         name: 'otp::testnet',
