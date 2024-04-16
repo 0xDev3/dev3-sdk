@@ -7,7 +7,7 @@ export default defineConfig([
   {
     name: 'browser',
     entry: ['src/index.ts'],
-    sourcemap: false,
+    sourcemap: true,
     platform: 'browser',
     clean: true,
     minify: true,
@@ -23,7 +23,7 @@ export default defineConfig([
   {
     name: 'node',
     entry: ['src/index.ts'],
-    sourcemap: false,
+    sourcemap: true,
     platform: 'node',
     clean: true,
     minify: true,

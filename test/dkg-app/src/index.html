@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Parcel Sandbox</title>
+    <title>Dev3 DKG Showcase</title>
     <meta charset="UTF-8" />
   </head>
 
   <body>
-    <div id="app"></div>
-    <input id="button" type="button" value="Store" />
+    <h1>Storing a DKG Asset using Dev3 SDK</h1>
+
+    <p>This example shows how to store an asset on the DKG using nothing but the Dev3 platform.</p>
+    <p>Prerequisits:</p>
+    <ol>
+      <li>Workspace created on the app.dev3.sh on the Gnosis Chain. API key and Project ID must be configured in the `index.mjs` file in the project root.</li>
+      <li>Having an account funded with some native XDAI for executing transactions</li>
+      <li>Having some TRAC token for storing a knowledge asset</li>
+    </ol>
+
+    <p>Hit connect wallet button below. This will connect wallet to the app and check if Dev3 API is successfully initialized.
+      It also checks for TRAC balance on the connected wallet.</p>
+
+    <input id="connect-button" type="button" value="Connect Wallet" />
+    <p id="connect-status"></p>
+    
+    <input id="store-asset" type="button" value="Store" style="display: none;"/>
+    <p id="create-status"></p>
+    
     <script src="./index.mjs" type="module"></script>
 
   </body>

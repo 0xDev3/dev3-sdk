@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dev3-sdk": "file:../../"
+    "bignumber.js": "^9.1.2",
+    "dev3-sdk": "file:../../",
+    "spin.js": "^4.1.1"
   },
   "devDependencies": {
     "parcel": "^2.9.3"
